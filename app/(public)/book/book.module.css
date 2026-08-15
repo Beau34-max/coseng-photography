@@ -1,0 +1,135 @@
+.page { min-height: 100vh; }
+
+.hero {
+  background: linear-gradient(135deg, #0d1117 0%, #1a2332 100%);
+  padding: 5rem 2rem 3rem; text-align: center; color: #fff;
+}
+.hero h1 { font-size: 2.5rem; font-weight: 800; margin: 0 0 0.75rem; }
+.hero p { font-size: 1.1rem; color: rgba(255,255,255,0.7); margin: 0 auto; max-width: 560px; }
+
+.container { max-width: 900px; margin: 0 auto; padding: 3rem 2rem; }
+
+.steps {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0; margin-bottom: 2.5rem;
+}
+.step {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.9rem; color: #9ca3af; font-weight: 600;
+  padding: 0.5rem 1rem;
+}
+.step span {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.8rem; font-weight: 700;
+  background: #f1f5f9; color: #9ca3af;
+}
+.stepActive { color: #0d1117; }
+.stepActive span { background: #0d1117; color: #fff; }
+.stepLine { flex: 1; height: 2px; background: #e5e7eb; max-width: 60px; }
+
+.sectionTitle { font-size: 1.25rem; font-weight: 700; color: #0d1117; margin: 0 0 1.5rem; }
+
+.packagesGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+
+.packageCard {
+  border: 2px solid #e5e7eb; border-radius: 14px; padding: 1.25rem;
+  cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+.packageCard:hover { border-color: #c4b5fd; box-shadow: 0 4px 16px rgba(109,40,217,0.1); }
+.packageSelected { border-color: #6d28d9; box-shadow: 0 4px 16px rgba(109,40,217,0.15); }
+
+.packageHeader { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.5rem; }
+.packageHeader h3 { font-size: 1rem; font-weight: 700; color: #0d1117; margin: 0; }
+.packagePrice { font-size: 1.25rem; font-weight: 800; color: #6d28d9; white-space: nowrap; }
+.packageDuration { display: flex; align-items: center; gap: 0.35rem; font-size: 0.78rem; color: #6b7280; margin-bottom: 0.6rem; }
+.packageDesc { font-size: 0.83rem; color: #4b5563; margin: 0 0 0.75rem; }
+.packageIncludes { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.3rem; }
+.packageIncludes li { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; color: #374151; }
+.packageIncludes li svg { color: #059669; flex-shrink: 0; }
+.selectedMark {
+  position: absolute; top: 0.75rem; right: 0.75rem;
+  display: flex; align-items: center; gap: 0.3rem;
+  background: #6d28d9; color: #fff; padding: 3px 9px; border-radius: 12px;
+  font-size: 0.72rem; font-weight: 700;
+}
+
+.stepFooter { margin-top: 2rem; display: flex; justify-content: flex-end; }
+.nextBtn {
+  padding: 0.75rem 2rem; background: #0d1117; color: #fff;
+  border: none; border-radius: 10px; font-size: 1rem; font-weight: 700;
+  cursor: pointer; transition: background 0.2s; font-family: inherit;
+}
+.nextBtn:hover:not(:disabled) { background: #1f2937; }
+.nextBtn:disabled { background: #9ca3af; cursor: not-allowed; }
+
+.selectedSummary {
+  display: flex; align-items: center; gap: 1rem;
+  background: #f1f5f9; border-radius: 10px; padding: 1rem 1.25rem;
+  margin-bottom: 2rem; color: #374151;
+}
+.selectedSummary > div { flex: 1; display: flex; flex-direction: column; gap: 0.2rem; }
+.selectedSummary strong { font-size: 0.95rem; color: #0d1117; }
+.selectedSummary span { font-size: 0.82rem; color: #6b7280; }
+.changeBtn {
+  padding: 0.4rem 0.9rem; background: #fff; border: 1px solid #d1d5db;
+  border-radius: 7px; font-size: 0.82rem; font-weight: 600; color: #374151;
+  cursor: pointer; font-family: inherit;
+}
+.changeBtn:hover { background: #f9fafb; }
+
+.error {
+  padding: 0.75rem 1rem; background: #fef2f2; color: #b91c1c;
+  border-radius: 8px; font-size: 0.85rem; margin-bottom: 1rem;
+}
+.form { display: flex; flex-direction: column; gap: 1rem; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.field { display: flex; flex-direction: column; gap: 0.35rem; }
+.field label { font-size: 0.82rem; font-weight: 600; color: #374151; }
+.field input, .field textarea {
+  padding: 0.7rem 0.9rem; border: 1px solid #d1d5db; border-radius: 9px;
+  font-size: 0.9rem; color: #0d1117; background: #f9fafb;
+  box-sizing: border-box; transition: border-color 0.2s; font-family: inherit;
+}
+.field input:focus, .field textarea:focus { outline: none; border-color: #6d28d9; background: #fff; }
+.formFooter { display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; }
+.backBtn {
+  padding: 0.7rem 1.25rem; background: none; border: 1px solid #d1d5db;
+  border-radius: 9px; font-size: 0.9rem; font-weight: 600; color: #374151;
+  cursor: pointer; transition: background 0.2s; font-family: inherit;
+}
+.backBtn:hover { background: #f9fafb; }
+.submitBtn {
+  padding: 0.75rem 2rem; background: #0d1117; color: #fff;
+  border: none; border-radius: 9px; font-size: 1rem; font-weight: 700;
+  cursor: pointer; transition: background 0.2s; font-family: inherit;
+}
+.submitBtn:hover:not(:disabled) { background: #1f2937; }
+.submitBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+.note { font-size: 0.78rem; color: #9ca3af; margin: 0.5rem 0 0; text-align: center; }
+
+.success {
+  max-width: 500px; margin: 4rem auto; text-align: center;
+  background: #fff; border-radius: 16px; padding: 3rem 2rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+.successIcon {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: #dcfce7; color: #166534;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1.25rem;
+}
+.success h2 { font-size: 1.5rem; font-weight: 700; color: #0d1117; margin: 0 0 0.75rem; }
+.success p { font-size: 0.9rem; color: #374151; margin: 0 0 0.5rem; }
+.homeBtn {
+  display: inline-block; margin-top: 1.5rem;
+  padding: 0.7rem 1.5rem; background: #0d1117; color: #fff;
+  border-radius: 9px; text-decoration: none; font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .row { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 1.75rem; }
+  .packagesGrid { grid-template-columns: 1fr; }
+}

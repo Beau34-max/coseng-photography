@@ -1,0 +1,65 @@
+.page { min-height: 100vh; }
+
+.hero {
+  background: linear-gradient(135deg, #0d1117 0%, #1a2332 100%);
+  padding: 6rem 2rem 4rem; text-align: center; color: #fff;
+}
+.heroContent { max-width: 700px; margin: 0 auto; }
+.tag {
+  display: inline-block; padding: 4px 14px; background: rgba(232,180,184,0.15); color: #e8b4b8;
+  border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem;
+  border: 1px solid rgba(232,180,184,0.3);
+}
+.hero h1 { font-size: 2.75rem; font-weight: 800; margin: 0 0 1rem; }
+.hero p { font-size: 1.1rem; color: rgba(255,255,255,0.7); margin: 0; }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+
+.story { padding: 5rem 0; }
+.storyGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+.storyGrid h2 { font-size: 1.75rem; font-weight: 700; color: #0d1117; margin: 0 0 1rem; }
+.storyGrid p { color: #4b5563; line-height: 1.7; margin: 0 0 1rem; }
+
+.statGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.stat {
+  background: #f8fafc; border-radius: 12px; padding: 1.5rem;
+  display: flex; flex-direction: column; gap: 0.35rem; text-align: center;
+}
+.statValue { font-size: 2rem; font-weight: 800; color: #0d1117; }
+.statLabel { font-size: 0.82rem; color: #6b7280; font-weight: 500; }
+
+.services { background: #f8fafc; padding: 5rem 0; }
+.sectionTitle { font-size: 1.75rem; font-weight: 700; color: #0d1117; margin: 0 0 2rem; text-align: center; }
+.servicesGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+.serviceCard {
+  background: #fff; border-radius: 14px; padding: 1.75rem 1.25rem;
+  text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.serviceIcon { font-size: 2.25rem; display: block; margin-bottom: 1rem; }
+.serviceCard h3 { font-size: 1rem; font-weight: 700; color: #0d1117; margin: 0 0 0.5rem; }
+.serviceCard p { font-size: 0.85rem; color: #6b7280; margin: 0; line-height: 1.6; }
+
+.cta {
+  background: #0d1117; padding: 5rem 0; text-align: center; color: #fff;
+}
+.cta h2 { font-size: 2rem; font-weight: 700; margin: 0 0 0.75rem; }
+.cta p { font-size: 1rem; color: rgba(255,255,255,0.65); margin: 0 0 2rem; }
+.ctaBtns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+.ctaPrimary {
+  padding: 0.85rem 2rem; background: #e8b4b8; color: #0d1117;
+  border-radius: 10px; text-decoration: none; font-weight: 700;
+}
+.ctaSecondary {
+  padding: 0.85rem 2rem; background: rgba(255,255,255,0.1); color: #fff;
+  border-radius: 10px; text-decoration: none; font-weight: 600;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+@media (max-width: 900px) {
+  .storyGrid { grid-template-columns: 1fr; gap: 2rem; }
+  .servicesGrid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .hero h1 { font-size: 2rem; }
+  .servicesGrid { grid-template-columns: 1fr; }
+}

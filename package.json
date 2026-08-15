@@ -1,0 +1,29 @@
+{
+  "name": "coseng-photography",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@stripe/stripe-js": "^9.13.0",
+    "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.10.0",
+    "jose": "^6.2.9",
+    "mongodb": "^7.5.0",
+    "next": "14.2.35",
+    "next-cloudinary": "^6.18.8",
+    "nodemailer": "^9.0.5",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-icons": "^5.7.0",
+    "stripe": "^22.5.0"
+  },
+  "devDependencies": {
+    "eslint": "^8",
+    "eslint-config-next": "14.2.35"
+  }
+}

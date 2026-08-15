@@ -1,0 +1,38 @@
+.sidebar {
+  width: 240px; flex-shrink: 0; background: #0d1117;
+  min-height: 100vh; display: flex; flex-direction: column;
+  position: sticky; top: 0;
+  border-right: 1px solid rgba(255,255,255,0.06);
+}
+
+.logo {
+  display: flex; align-items: center; gap: 0.55rem;
+  padding: 1.5rem 1.25rem 1.25rem;
+  font-size: 1rem; font-weight: 700; color: #fff;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.logo em { color: #e8b4b8; font-style: normal; }
+.logo svg { color: #e8b4b8; }
+
+.nav { display: flex; flex-direction: column; gap: 2px; padding: 1rem 0.75rem; flex: 1; }
+
+.navItem {
+  display: flex; align-items: center; gap: 0.65rem;
+  padding: 0.65rem 0.9rem; border-radius: 8px;
+  font-size: 0.875rem; color: rgba(255,255,255,0.55);
+  transition: color 0.2s, background 0.2s;
+}
+.navItem:hover { color: #fff; background: rgba(255,255,255,0.06); }
+.navActive { color: #fff; background: rgba(232,180,184,0.12); }
+.navActive svg { color: #e8b4b8; }
+
+.bottom { padding: 0.75rem; border-top: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; gap: 4px; }
+.viewSite, .logout {
+  display: flex; align-items: center; gap: 0.55rem;
+  padding: 0.6rem 0.9rem; border-radius: 8px;
+  font-size: 0.82rem; color: rgba(255,255,255,0.4);
+  transition: color 0.2s, background 0.2s;
+  background: none; border: none; text-decoration: none; cursor: pointer;
+  font-family: inherit; width: 100%; text-align: left;
+}
+.viewSite:hover, .logout:hover { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.05); }
