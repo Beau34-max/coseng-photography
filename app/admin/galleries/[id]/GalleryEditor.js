@@ -156,6 +156,17 @@ export default function GalleryEditor({ gallery: initial, photos: initialPhotos 
           </div>
 
           <div className={styles.section}>
+            <h3>Homepage & Carousel</h3>
+            <div className={styles.field}>
+              <label className={styles.toggle}>
+                <input type="checkbox" checked={!!gallery.featured} onChange={(e) => setGallery((g) => ({ ...g, featured: e.target.checked }))} />
+                <span>Feature gallery on homepage</span>
+              </label>
+              <p className={styles.sectionHint}>When featured, this gallery&apos;s cover photo appears in the homepage carousel. Use the <strong>house icon</strong> on individual photos below to add specific shots.</p>
+            </div>
+          </div>
+
+          <div className={styles.section}>
             <h3>Client Delivery</h3>
             <div className={styles.field}>
               <label>Client Name</label>
