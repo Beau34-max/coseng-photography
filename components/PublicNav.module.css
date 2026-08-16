@@ -40,7 +40,7 @@
   color: #1a1a1a; background: #a8d48a;
   transition: background 0.2s;
 }
-.clientBtn:hover { background: #d4a0a4; }
+.clientBtn:hover { background: #8fbe6e; }
 
 .burger {
   display: none; background: none; border: none;

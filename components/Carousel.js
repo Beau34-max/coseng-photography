@@ -1,9 +1,9 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useRef } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import styles from "./Carousel.module.css";
 
-const slides = [
+const SLIDES = [
   { src: "/photography/image1.jpg", label: "Birthday Photoshoot" },
   { src: "/photography/image2.jpg", label: "Children's Portraits" },
   { src: "/photography/image3.jpg", label: "Studio Session" },
@@ -14,52 +14,79 @@ const slides = [
   { src: "/photography/image9.jpg", label: "Portrait Session" },
 ];
 
-export default function Carousel() {
-  const [current, setCurrent] = useState(0);
-  const [paused, setPaused] = useState(false);
+const SPEED = 0.55; // pixels per frame
 
-  const next = useCallback(() => setCurrent((c) => (c + 1) % slides.length), []);
-  const prev = useCallback(() => setCurrent((c) => (c - 1 + slides.length) % slides.length), []);
+export default function Carousel() {
+  const trackRef = useRef(null);
+  const posRef = useRef(0);
+  const pausedRef = useRef(false);
+  const slideWRef = useRef(0);
+  const totalWRef = useRef(0);
+  const rafRef = useRef(null);
 
   useEffect(() => {
-    if (paused) return;
-    const t = setInterval(next, 4500);
-    return () => clearInterval(t);
-  }, [next, paused]);
+    const track = trackRef.current;
+    if (!track) return;
+    const firstSlide = track.firstElementChild;
+    const w = firstSlide.offsetWidth + 6; // +6 for gap
+    slideWRef.current = w;
+    totalWRef.current = w * SLIDES.length;
+
+    const animate = () => {
+      if (!pausedRef.current) {
+        posRef.current -= SPEED;
+        if (Math.abs(posRef.current) >= totalWRef.current) {
+          posRef.current = 0;
+        }
+        track.style.transform = `translateX(${posRef.current}px)`;
+      }
+      rafRef.current = requestAnimationFrame(animate);
+    };
+
+    rafRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, []);
+
+  function jump(dir) {
+    if (!slideWRef.current) return;
+    posRef.current += dir * slideWRef.current;
+    if (posRef.current > 0) posRef.current = -(totalWRef.current - slideWRef.current);
+    if (Math.abs(posRef.current) >= totalWRef.current) posRef.current = 0;
+  }
 
   return (
     <section
       className={styles.carousel}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      onMouseEnter={() => { pausedRef.current = true; }}
+      onMouseLeave={() => { pausedRef.current = false; }}
     >
-      {slides.map((slide, i) => (
-        <div key={slide.src} className={`${styles.slide} ${i === current ? styles.active : ""}`}>
-          <img src={slide.src} alt={slide.label} />
-          <div className={styles.overlay} />
-          <div className={styles.caption}>
-            <span>{slide.label}</span>
-          </div>
+      <div className={styles.viewport}>
+        <div ref={trackRef} className={styles.track}>
+          {[...SLIDES, ...SLIDES].map((slide, i) => (
+            <div key={i} className={styles.slide}>
+              <img src={slide.src} alt={slide.label} />
+              <div className={styles.caption}>
+                <span>{slide.label}</span>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
-
-      <button className={`${styles.arrow} ${styles.arrowLeft}`} onClick={prev} aria-label="Previous">
-        <FiChevronLeft size={28} />
-      </button>
-      <button className={`${styles.arrow} ${styles.arrowRight}`} onClick={next} aria-label="Next">
-        <FiChevronRight size={28} />
-      </button>
-
-      <div className={styles.dots}>
-        {slides.map((_, i) => (
-          <button
-            key={i}
-            className={`${styles.dot} ${i === current ? styles.dotActive : ""}`}
-            onClick={() => setCurrent(i)}
-            aria-label={`Go to slide ${i + 1}`}
-          />
-        ))}
       </div>
+
+      <button
+        className={`${styles.arrow} ${styles.arrowLeft}`}
+        onClick={() => jump(1)}
+        aria-label="Previous"
+      >
+        <FiChevronLeft size={30} />
+      </button>
+      <button
+        className={`${styles.arrow} ${styles.arrowRight}`}
+        onClick={() => jump(-1)}
+        aria-label="Next"
+      >
+        <FiChevronRight size={30} />
+      </button>
     </section>
   );
 }

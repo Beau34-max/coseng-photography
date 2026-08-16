@@ -22,8 +22,8 @@ export default function PublicNav() {
     <nav className={styles.nav}>
       <div className={styles.inner}>
         <Link href="/" className={styles.logo}>
-          <Image src="/images/cosenglogo.png" alt="COSENG" width={110} height={36} style={{ objectFit: "contain" }} />
-          <em>Photography</em>
+          <Image src="/images/cosenglogo.png" alt="COSENG" width={100} height={32} style={{ objectFit: "contain" }} />
+          <span>COSENG <em>Photography</em></span>
         </Link>
 
         <ul className={`${styles.links} ${open ? styles.mobileOpen : ""}`}>

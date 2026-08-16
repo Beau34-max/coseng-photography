@@ -36,19 +36,53 @@ export default function GalleryEditor({ gallery: initial, photos: initialPhotos 
     if (!files.length) return;
     setUploading(true);
     setUploadProgress(0);
-    const formData = new FormData();
-    formData.append("galleryId", gallery._id);
-    files.forEach((f) => formData.append("photos", f));
     try {
-      const res = await fetch("/api/photos/upload", { method: "POST", body: formData });
-      const data = await res.json();
-      if (res.ok) {
+      // Step 1: get Cloudinary signature from our server
+      const sigRes = await fetch("/api/photos/sign-upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ galleryId: gallery._id }),
+      });
+      if (!sigRes.ok) throw new Error("Failed to get upload signature");
+      const { signature, timestamp, cloudName, apiKey, folder } = await sigRes.json();
+
+      // Step 2: upload each file directly to Cloudinary (no Vercel size limit)
+      const cloudinaryResults = [];
+      for (let i = 0; i < files.length; i++) {
+        setUploadProgress(Math.round(((i + 0.5) / files.length) * 85));
+        const fd = new FormData();
+        fd.append("file", files[i]);
+        fd.append("api_key", apiKey);
+        fd.append("timestamp", String(timestamp));
+        fd.append("signature", signature);
+        fd.append("folder", folder);
+        const up = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+          method: "POST", body: fd,
+        });
+        if (!up.ok) throw new Error("Cloudinary upload failed");
+        cloudinaryResults.push(await up.json());
+      }
+
+      setUploadProgress(90);
+
+      // Step 3: save metadata to MongoDB via our server
+      const saveRes = await fetch("/api/photos/save-upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ galleryId: gallery._id, photos: cloudinaryResults }),
+      });
+      const data = await saveRes.json();
+      if (saveRes.ok) {
         setPhotos((p) => [...p, ...data.uploaded]);
         setGallery((g) => ({ ...g, photoCount: g.photoCount + data.uploaded.length }));
         showFlash(`${data.uploaded.length} photo${data.uploaded.length > 1 ? "s" : ""} uploaded`);
-      } else { showFlash(data.error || "Upload failed"); }
-    } catch { showFlash("Upload failed"); }
+      } else { showFlash(data.error || "Save failed"); }
+    } catch (err) {
+      console.error(err);
+      showFlash("Upload failed");
+    }
     setUploading(false);
+    setUploadProgress(0);
     e.target.value = "";
   }
 
