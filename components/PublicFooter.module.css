@@ -13,26 +13,26 @@
   display: flex; align-items: center; gap: 0.5rem;
   font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 0.85rem;
 }
-.logo em { color: #e8b4b8; font-style: normal; }
-.logo svg { color: #e8b4b8; }
+.logo em { color: #a8d48a; font-style: normal; }
+.logo svg { color: #a8d48a; }
 
 .brand p { font-size: 0.875rem; line-height: 1.7; max-width: 260px; }
 
 .socials { display: flex; gap: 0.75rem; margin-top: 1.25rem; }
 .socials a { color: rgba(255,255,255,0.5); transition: color 0.2s; }
-.socials a:hover { color: #e8b4b8; }
+.socials a:hover { color: #a8d48a; }
 
 .col { display: flex; flex-direction: column; gap: 0.6rem; }
 .col h4 { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; margin-bottom: 0.35rem; }
 .col a, .col span { font-size: 0.875rem; color: rgba(255,255,255,0.55); transition: color 0.2s; }
-.col a:hover { color: #e8b4b8; }
+.col a:hover { color: #a8d48a; }
 
 .bottom {
   max-width: 1200px; margin: 0 auto;
   padding: 1.5rem 0; display: flex; justify-content: space-between; align-items: center;
   font-size: 0.8rem; flex-wrap: wrap; gap: 0.5rem;
 }
-.bottom a { color: #e8b4b8; }
+.bottom a { color: #a8d48a; }
 
 @media (max-width: 768px) {
   .inner { grid-template-columns: 1fr 1fr; gap: 2rem; }

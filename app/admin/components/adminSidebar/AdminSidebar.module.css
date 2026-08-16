@@ -11,8 +11,8 @@
   font-size: 1rem; font-weight: 700; color: #fff;
   border-bottom: 1px solid rgba(255,255,255,0.06);
 }
-.logo em { color: #e8b4b8; font-style: normal; }
-.logo svg { color: #e8b4b8; }
+.logo em { color: #a8d48a; font-style: normal; }
+.logo svg { color: #a8d48a; }
 
 .nav { display: flex; flex-direction: column; gap: 2px; padding: 1rem 0.75rem; flex: 1; }
 
@@ -23,8 +23,8 @@
   transition: color 0.2s, background 0.2s;
 }
 .navItem:hover { color: #fff; background: rgba(255,255,255,0.06); }
-.navActive { color: #fff; background: rgba(232,180,184,0.12); }
-.navActive svg { color: #e8b4b8; }
+.navActive { color: #fff; background: rgba(168,212,138,0.12); }
+.navActive svg { color: #a8d48a; }
 
 .bottom { padding: 0.75rem; border-top: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; gap: 4px; }
 .viewSite, .logout {

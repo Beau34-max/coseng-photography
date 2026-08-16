@@ -17,8 +17,8 @@
   font-size: 1.05rem; font-weight: 700; color: #fff;
   letter-spacing: 0.02em; flex-shrink: 0;
 }
-.logo em { color: #e8b4b8; font-style: normal; }
-.logo svg { color: #e8b4b8; }
+.logo em { color: #a8d48a; font-style: normal; }
+.logo svg { color: #a8d48a; }
 
 .links {
   display: flex; align-items: center; gap: 0.25rem;
@@ -37,7 +37,7 @@
   margin-left: 0.5rem;
   padding: 0.45rem 1rem; border-radius: 6px;
   font-size: 0.88rem; font-weight: 700;
-  color: #1a1a1a; background: #e8b4b8;
+  color: #1a1a1a; background: #a8d48a;
   transition: background 0.2s;
 }
 .clientBtn:hover { background: #d4a0a4; }

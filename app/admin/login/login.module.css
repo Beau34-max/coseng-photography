@@ -10,7 +10,7 @@
 }
 .logo {
   display: flex; align-items: center; gap: 0.6rem;
-  margin-bottom: 1.5rem; color: #e8b4b8;
+  margin-bottom: 1.5rem; color: #a8d48a;
   font-size: 1.25rem;
 }
 .logo strong { color: #0d1117; }
@@ -35,7 +35,7 @@
   font-size: 0.9rem; color: #0d1117; background: #f9fafb;
   box-sizing: border-box; transition: border-color 0.2s;
 }
-.inputWrap input:focus { outline: none; border-color: #e8b4b8; background: #fff; }
+.inputWrap input:focus { outline: none; border-color: #a8d48a; background: #fff; }
 .icon {
   position: absolute; left: 0.8rem; top: 50%;
   transform: translateY(-50%); color: #9ca3af; pointer-events: none;

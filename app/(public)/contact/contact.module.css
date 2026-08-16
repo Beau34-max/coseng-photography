@@ -14,7 +14,7 @@
 .infoCol h2 { font-size: 1.25rem; font-weight: 700; color: #0d1117; margin: 0 0 1.5rem; }
 .infoList { display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 2rem; }
 .infoItem { display: flex; align-items: flex-start; gap: 1rem; color: #374151; }
-.infoItem svg { color: #e8b4b8; flex-shrink: 0; margin-top: 2px; }
+.infoItem svg { color: #a8d48a; flex-shrink: 0; margin-top: 2px; }
 .infoItem div { display: flex; flex-direction: column; }
 .infoItem strong { font-size: 0.85rem; font-weight: 700; color: #0d1117; }
 .infoItem span { font-size: 0.85rem; color: #6b7280; }
@@ -40,7 +40,7 @@
   font-size: 0.9rem; color: #0d1117; background: #f9fafb;
   box-sizing: border-box; transition: border-color 0.2s; font-family: inherit;
 }
-.field input:focus, .field textarea:focus { outline: none; border-color: #e8b4b8; background: #fff; }
+.field input:focus, .field textarea:focus { outline: none; border-color: #a8d48a; background: #fff; }
 .error {
   padding: 0.75rem 1rem; background: #fef2f2; color: #b91c1c;
   border-radius: 8px; font-size: 0.85rem;
