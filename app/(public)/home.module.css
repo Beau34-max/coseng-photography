@@ -22,7 +22,7 @@
 .heroSub { font-size: 1.15rem; color: rgba(255,255,255,0.75); max-width: 560px; line-height: 1.7; margin-bottom: 2.5rem; }
 .heroCtas { display: flex; flex-wrap: wrap; gap: 0.85rem; }
 .heroBtnPrimary { display: inline-flex; align-items: center; gap: 0.5rem; background: #a8d48a; color: #1a1a1a; padding: 0.85rem 1.75rem; border-radius: 8px; font-weight: 700; font-size: 0.95rem; transition: background 0.2s; }
-.heroBtnPrimary:hover { background: #d4a0a4; }
+.heroBtnPrimary:hover { background: #8fbe6e; }
 .heroBtnOutline { display: inline-flex; align-items: center; gap: 0.5rem; border: 2px solid rgba(255,255,255,0.5); color: #fff; padding: 0.82rem 1.75rem; border-radius: 8px; font-weight: 700; font-size: 0.95rem; transition: border-color 0.2s, background 0.2s; }
 .heroBtnOutline:hover { border-color: #fff; background: rgba(255,255,255,0.1); }
 .heroBtnGhost { display: inline-flex; align-items: center; gap: 0.5rem; color: rgba(255,255,255,0.7); padding: 0.82rem 1.2rem; border-radius: 8px; font-size: 0.95rem; transition: color 0.2s; }
@@ -32,6 +32,10 @@
 .statItem:last-child { border-right: none; }
 .statItem strong { display: block; font-size: 1.6rem; font-weight: 900; color: #a8d48a; }
 .statItem span { font-size: 0.78rem; color: rgba(255,255,255,0.6); margin-top: 0.2rem; display: block; }
+
+/* ── CAROUSEL ── */
+.carouselSection { padding-top: 5.5rem; }
+.carouselSection .sectionInner { margin-bottom: 2.5rem; }
 
 /* ── SERVICES ── */
 .services { padding: 5.5rem 1.5rem; background: #fafafa; }
@@ -71,7 +75,7 @@
 .clientFeature svg { color: #a8d48a; flex-shrink: 0; }
 
 /* ── BOOK CTA ── */
-.bookCta { padding: 5.5rem 1.5rem; text-align: center; background: linear-gradient(135deg, #3d0f1e 0%, #6a994e 100%); color: #fff; }
+.bookCta { padding: 5.5rem 1.5rem; text-align: center; background: linear-gradient(135deg, #0d2a4e 0%, #6a994e 100%); color: #fff; }
 .bookCta h2 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 800; margin-bottom: 1rem; }
 .bookCta p { font-size: 1.05rem; color: rgba(255,255,255,0.75); margin-bottom: 2rem; }
 .bookCta .heroBtnPrimary { background: #fff; color: #6a994e; }

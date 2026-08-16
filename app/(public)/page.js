@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { connectToDb } from "@/lib/mongodb";
-import { FiCamera, FiStar, FiCalendar, FiImage, FiUser, FiDownload } from "react-icons/fi";
+import { FiStar, FiCalendar, FiImage, FiUser, FiDownload } from "react-icons/fi";
+import Carousel from "@/components/Carousel";
 import styles from "./home.module.css";
 
 export const revalidate = 60;
@@ -70,6 +71,18 @@ export default async function HomePage() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* PORTFOLIO CAROUSEL */}
+      <section className={styles.carouselSection}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionHeader}>
+            <span className={styles.sectionTag}>Our Portfolio</span>
+            <h2>Moments We&apos;ve Captured</h2>
+            <p>From birthday photoshoots to graduation portraits — every moment tells a story.</p>
+          </div>
+        </div>
+        <Carousel />
       </section>
 
       {/* SERVICES */}
