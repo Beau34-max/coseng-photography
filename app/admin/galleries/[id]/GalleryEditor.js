@@ -1,22 +1,24 @@
 "use client";
-import { useState, useCallback } from "react";
-import Image from "next/image";
-import { FiUploadCloud, FiTrash2, FiStar, FiCheck, FiAlertCircle, FiHome } from "react-icons/fi";
+import { useState } from "react";
+import { FiUploadCloud, FiTrash2, FiStar, FiCheck, FiHome, FiSettings, FiGrid, FiActivity, FiEye, FiLink } from "react-icons/fi";
 import styles from "./gallery-editor.module.css";
+
+const TABS = [
+  { id: "organize", label: "Organize", Icon: FiGrid },
+  { id: "settings", label: "Settings", Icon: FiSettings },
+  { id: "activity", label: "Activity", Icon: FiActivity },
+];
 
 export default function GalleryEditor({ gallery: initial, photos: initialPhotos }) {
   const [gallery, setGallery] = useState(initial);
   const [photos, setPhotos] = useState(initialPhotos);
+  const [tab, setTab] = useState("organize");
   const [uploading, setUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
   const [saving, setSaving] = useState(false);
   const [flash, setFlash] = useState("");
   const [deleteId, setDeleteId] = useState(null);
 
-  function showFlash(msg) {
-    setFlash(msg);
-    setTimeout(() => setFlash(""), 3000);
-  }
+  function showFlash(msg) { setFlash(msg); setTimeout(() => setFlash(""), 3000); }
 
   async function handleSave() {
     setSaving(true);
@@ -35,9 +37,7 @@ export default function GalleryEditor({ gallery: initial, photos: initialPhotos 
     const files = Array.from(e.target.files);
     if (!files.length) return;
     setUploading(true);
-    setUploadProgress(0);
     try {
-      // Step 1: get Cloudinary signature from our server
       const sigRes = await fetch("/api/photos/sign-upload", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -46,10 +46,8 @@ export default function GalleryEditor({ gallery: initial, photos: initialPhotos 
       if (!sigRes.ok) throw new Error("Failed to get upload signature");
       const { signature, timestamp, cloudName, apiKey, folder } = await sigRes.json();
 
-      // Step 2: upload each file directly to Cloudinary (no Vercel size limit)
       const cloudinaryResults = [];
       for (let i = 0; i < files.length; i++) {
-        setUploadProgress(Math.round(((i + 0.5) / files.length) * 85));
         const fd = new FormData();
         fd.append("file", files[i]);
         fd.append("api_key", apiKey);
@@ -62,14 +60,11 @@ export default function GalleryEditor({ gallery: initial, photos: initialPhotos 
         if (!up.ok) {
           const errBody = await up.text();
           console.error("Cloudinary error:", up.status, errBody);
-          throw new Error(`Cloudinary upload failed (${up.status}): ${errBody}`);
+          throw new Error(`Upload failed (${up.status})`);
         }
         cloudinaryResults.push(await up.json());
       }
 
-      setUploadProgress(90);
-
-      // Step 3: save metadata to MongoDB via our server
       const saveRes = await fetch("/api/photos/save-upload", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -79,14 +74,13 @@ export default function GalleryEditor({ gallery: initial, photos: initialPhotos 
       if (saveRes.ok) {
         setPhotos((p) => [...p, ...data.uploaded]);
         setGallery((g) => ({ ...g, photoCount: g.photoCount + data.uploaded.length }));
-        showFlash(`${data.uploaded.length} photo${data.uploaded.length > 1 ? "s" : ""} uploaded`);
+        showFlash(`${data.uploaded.length} photo${data.uploaded.length !== 1 ? "s" : ""} uploaded`);
       } else { showFlash(data.error || "Save failed"); }
     } catch (err) {
       console.error(err);
-      showFlash("Upload failed");
+      showFlash(err.message || "Upload failed");
     }
     setUploading(false);
-    setUploadProgress(0);
     e.target.value = "";
   }
 
@@ -125,80 +119,59 @@ export default function GalleryEditor({ gallery: initial, photos: initialPhotos 
     <div className={styles.page}>
       {flash && <div className={styles.flash}><FiCheck size={15} /> {flash}</div>}
 
+      {/* Top bar */}
       <div className={styles.topBar}>
-        <div>
-          <h1>{gallery.title}</h1>
-          <p>{gallery.photoCount} photos · {gallery.viewCount} views · {gallery.category}</p>
+        <div className={styles.topBarLeft}>
+          {gallery.coverImage && (
+            <div className={styles.coverThumb}>
+              <img src={gallery.coverImage} alt="" />
+            </div>
+          )}
+          <div>
+            <h1>{gallery.title}</h1>
+            <p>{gallery.photoCount} photos · {gallery.viewCount || 0} views · {gallery.category}</p>
+          </div>
         </div>
-        <button onClick={handleSave} className={styles.saveBtn} disabled={saving}>
-          {saving ? "Saving…" : "Save Changes"}
-        </button>
+        <div className={styles.topBarRight}>
+          {gallery.isPublic && (
+            <a href={`/gallery/${gallery.slug || gallery._id}`} target="_blank" rel="noopener noreferrer" className={styles.previewBtn}>
+              <FiEye size={14} /> Preview
+            </a>
+          )}
+          <button onClick={handleSave} className={styles.saveBtn} disabled={saving}>
+            {saving ? "Saving…" : "Save Changes"}
+          </button>
+        </div>
       </div>
 
-      <div className={styles.layout}>
-        <div className={styles.leftCol}>
-          <div className={styles.section}>
-            <h3>Gallery Details</h3>
-            <div className={styles.field}>
-              <label>Title</label>
-              <input value={gallery.title} onChange={(e) => setGallery((g) => ({ ...g, title: e.target.value }))} />
-            </div>
-            <div className={styles.field}>
-              <label>Description</label>
-              <textarea rows={3} value={gallery.description || ""} onChange={(e) => setGallery((g) => ({ ...g, description: e.target.value }))} />
-            </div>
-            <div className={styles.field}>
-              <label className={styles.toggle}>
-                <input type="checkbox" checked={gallery.isPublic} onChange={(e) => setGallery((g) => ({ ...g, isPublic: e.target.checked }))} />
-                <span>Public gallery</span>
-              </label>
-            </div>
-          </div>
+      {/* Tabs */}
+      <div className={styles.tabs}>
+        {TABS.map(({ id, label, Icon }) => (
+          <button
+            key={id}
+            className={`${styles.tab} ${tab === id ? styles.tabActive : ""}`}
+            onClick={() => setTab(id)}
+          >
+            <Icon size={15} /> {label}
+          </button>
+        ))}
+      </div>
 
-          <div className={styles.section}>
-            <h3>Homepage & Carousel</h3>
-            <div className={styles.field}>
-              <label className={styles.toggle}>
-                <input type="checkbox" checked={!!gallery.featured} onChange={(e) => setGallery((g) => ({ ...g, featured: e.target.checked }))} />
-                <span>Feature gallery on homepage</span>
-              </label>
-              <p className={styles.sectionHint}>When featured, this gallery&apos;s cover photo appears in the homepage carousel. Use the <strong>house icon</strong> on individual photos below to add specific shots.</p>
-            </div>
-          </div>
-
-          <div className={styles.section}>
-            <h3>Client Delivery</h3>
-            <div className={styles.field}>
-              <label>Client Name</label>
-              <input value={gallery.clientName || ""} onChange={(e) => setGallery((g) => ({ ...g, clientName: e.target.value }))} />
-            </div>
-            <div className={styles.field}>
-              <label>Client Email</label>
-              <input type="email" value={gallery.clientEmail || ""} onChange={(e) => setGallery((g) => ({ ...g, clientEmail: e.target.value }))} />
-            </div>
-            <div className={styles.field}>
-              <label>Access Code</label>
-              <input value={gallery.accessCode || ""} onChange={(e) => setGallery((g) => ({ ...g, accessCode: e.target.value }))} />
-            </div>
-            {gallery.accessCode && (
-              <p className={styles.clientLink}>
-                Client link: <a href={`/client/${gallery.accessCode}`} target="_blank" rel="noopener noreferrer">/client/{gallery.accessCode}</a>
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div className={styles.rightCol}>
+      {/* ORGANIZE TAB */}
+      {tab === "organize" && (
+        <div className={styles.tabContent}>
           <div className={styles.uploadZone}>
             <label className={styles.uploadLabel}>
               <input type="file" accept="image/*" multiple onChange={handleUpload} disabled={uploading} style={{ display: "none" }} />
-              <FiUploadCloud size={32} />
-              <span>{uploading ? `Uploading…` : "Click to upload photos"}</span>
-              <span className={styles.uploadHint}>JPG, PNG, WebP — multiple allowed</span>
+              <FiUploadCloud size={36} />
+              <span>{uploading ? "Uploading — please wait…" : "Click to add photos"}</span>
+              <span className={styles.uploadHint}>JPG, PNG, WebP — any size, multiple at once</span>
             </label>
           </div>
 
-          {photos.length > 0 && (
+          {photos.length === 0 ? (
+            <div className={styles.emptyPhotos}><p>No photos yet — upload some above.</p></div>
+          ) : (
             <div className={styles.photosGrid}>
               {photos.map((photo) => (
                 <div key={photo._id} className={styles.photoCard}>
@@ -207,25 +180,32 @@ export default function GalleryEditor({ gallery: initial, photos: initialPhotos 
                     {gallery.coverImage === photo.url && (
                       <div className={styles.coverBadge}><FiStar size={11} /> Cover</div>
                     )}
+                    {photo.showOnHomepage && (
+                      <div className={styles.homepageBadge}><FiHome size={11} /> Home</div>
+                    )}
                   </div>
                   <div className={styles.photoActions}>
                     <button
                       onClick={() => toggleHomepage(photo)}
                       className={`${styles.iconBtn} ${photo.showOnHomepage ? styles.homepageActive : ""}`}
-                      title={photo.showOnHomepage ? "Remove from homepage carousel" : "Show on homepage carousel"}
+                      title={photo.showOnHomepage ? "Remove from homepage" : "Add to homepage carousel"}
                     >
-                      <FiHome size={14} />
+                      <FiHome size={13} />
                     </button>
                     {gallery.coverImage !== photo.url && (
-                      <button onClick={() => setCover(photo)} className={styles.iconBtn} title="Set as cover"><FiStar size={14} /></button>
+                      <button onClick={() => setCover(photo)} className={styles.iconBtn} title="Set as gallery cover">
+                        <FiStar size={13} />
+                      </button>
                     )}
                     {deleteId === photo._id ? (
                       <div className={styles.confirmDelete}>
-                        <button onClick={() => handleDelete(photo._id)} className={styles.confirmBtn}>Yes, delete</button>
+                        <button onClick={() => handleDelete(photo._id)} className={styles.confirmBtn}>Delete</button>
                         <button onClick={() => setDeleteId(null)} className={styles.cancelBtn}>Cancel</button>
                       </div>
                     ) : (
-                      <button onClick={() => setDeleteId(photo._id)} className={`${styles.iconBtn} ${styles.deleteBtn}`} title="Delete"><FiTrash2 size={14} /></button>
+                      <button onClick={() => setDeleteId(photo._id)} className={`${styles.iconBtn} ${styles.deleteBtn}`} title="Delete">
+                        <FiTrash2 size={13} />
+                      </button>
                     )}
                   </div>
                 </div>
@@ -233,7 +213,98 @@ export default function GalleryEditor({ gallery: initial, photos: initialPhotos 
             </div>
           )}
         </div>
-      </div>
+      )}
+
+      {/* SETTINGS TAB */}
+      {tab === "settings" && (
+        <div className={styles.tabContent}>
+          <div className={styles.settingsGrid}>
+            <div>
+              <div className={styles.section}>
+                <h3>Gallery Details</h3>
+                <div className={styles.field}>
+                  <label>Title</label>
+                  <input value={gallery.title} onChange={(e) => setGallery((g) => ({ ...g, title: e.target.value }))} />
+                </div>
+                <div className={styles.field}>
+                  <label>Description</label>
+                  <textarea rows={3} value={gallery.description || ""} onChange={(e) => setGallery((g) => ({ ...g, description: e.target.value }))} />
+                </div>
+                <div className={styles.field}>
+                  <label className={styles.toggle}>
+                    <input type="checkbox" checked={gallery.isPublic} onChange={(e) => setGallery((g) => ({ ...g, isPublic: e.target.checked }))} />
+                    <span>Public gallery (visible to everyone)</span>
+                  </label>
+                </div>
+              </div>
+
+              <div className={styles.section}>
+                <h3><FiHome size={14} style={{ marginRight: 6 }} />Homepage & Carousel</h3>
+                <div className={styles.field}>
+                  <label className={styles.toggle}>
+                    <input type="checkbox" checked={!!gallery.featured} onChange={(e) => setGallery((g) => ({ ...g, featured: e.target.checked }))} />
+                    <span>Feature this gallery on the homepage</span>
+                  </label>
+                  <p className={styles.sectionHint}>
+                    When enabled, this gallery&apos;s cover photo shows in the homepage carousel.
+                    To pin specific photos instead, use the <FiHome size={11} /> icon in the Organize tab.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.section}>
+              <h3><FiLink size={14} style={{ marginRight: 6 }} />Client Delivery</h3>
+              <p className={styles.sectionHint}>Give your client a private link to view and download their gallery.</p>
+              <div className={styles.field}>
+                <label>Client Name</label>
+                <input value={gallery.clientName || ""} onChange={(e) => setGallery((g) => ({ ...g, clientName: e.target.value }))} placeholder="e.g. Joseph Family" />
+              </div>
+              <div className={styles.field}>
+                <label>Client Email</label>
+                <input type="email" value={gallery.clientEmail || ""} onChange={(e) => setGallery((g) => ({ ...g, clientEmail: e.target.value }))} placeholder="client@email.com" />
+              </div>
+              <div className={styles.field}>
+                <label>Access Code</label>
+                <input value={gallery.accessCode || ""} onChange={(e) => setGallery((g) => ({ ...g, accessCode: e.target.value }))} placeholder="e.g. josephfamily2024" />
+              </div>
+              {gallery.accessCode && (
+                <div className={styles.clientLinkBox}>
+                  <span>Client link:</span>
+                  <a href={`/client/${gallery.accessCode}`} target="_blank" rel="noopener noreferrer">
+                    photos.coseng.co.uk/client/{gallery.accessCode}
+                  </a>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ACTIVITY TAB */}
+      {tab === "activity" && (
+        <div className={styles.tabContent}>
+          <div className={styles.activityGrid}>
+            <div className={styles.statCard}><strong>{gallery.photoCount || 0}</strong><span>Photos</span></div>
+            <div className={styles.statCard}><strong>{gallery.viewCount || 0}</strong><span>Gallery Views</span></div>
+            <div className={styles.statCard}><strong>{photos.filter((p) => p.showOnHomepage).length}</strong><span>On Homepage</span></div>
+            <div className={styles.statCard}>
+              <strong>{gallery.isPublic ? "Public" : "Private"}</strong>
+              <span>Visibility</span>
+            </div>
+          </div>
+          <div className={styles.section} style={{ marginTop: "1.5rem" }}>
+            <h3>Gallery Info</h3>
+            <div className={styles.infoRow}><span>Category</span><strong>{gallery.category || "—"}</strong></div>
+            <div className={styles.infoRow}><span>Client</span><strong>{gallery.clientName || "—"}</strong></div>
+            <div className={styles.infoRow}><span>Access Code</span><strong>{gallery.accessCode || "None set"}</strong></div>
+            <div className={styles.infoRow}><span>Featured</span><strong>{gallery.featured ? "Yes — on homepage" : "No"}</strong></div>
+            {gallery.clientEmail && (
+              <div className={styles.infoRow}><span>Client Email</span><strong>{gallery.clientEmail}</strong></div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
