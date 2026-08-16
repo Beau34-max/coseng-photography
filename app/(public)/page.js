@@ -75,13 +75,6 @@ export default async function HomePage() {
 
       {/* PORTFOLIO CAROUSEL */}
       <section className={styles.carouselSection}>
-        <div className={styles.sectionInner}>
-          <div className={styles.sectionHeader}>
-            <span className={styles.sectionTag}>Our Portfolio</span>
-            <h2>Moments We&apos;ve Captured</h2>
-            <p>From birthday photoshoots to graduation portraits — every moment tells a story.</p>
-          </div>
-        </div>
         <Carousel />
       </section>
 
