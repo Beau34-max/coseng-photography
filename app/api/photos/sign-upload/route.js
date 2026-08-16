@@ -7,6 +7,10 @@ export async function POST(req) {
     const admin = await getAdminFromRequest(req);
     if (!admin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+    if (!process.env.CLOUDINARY_API_SECRET || !process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY) {
+      return NextResponse.json({ error: "Cloudinary environment variables not configured" }, { status: 500 });
+    }
+
     const { galleryId } = await req.json();
     const timestamp = Math.round(Date.now() / 1000);
     const folder = `coseng-photography/${galleryId}`;

@@ -1,9 +1,10 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { addWatermark } from "@/lib/photo-utils";
 import styles from "./Carousel.module.css";
 
-const SLIDES = [
+const STATIC_SLIDES = [
   { src: "/photography/image1.jpg", label: "Birthday Photoshoot" },
   { src: "/photography/image2.jpg", label: "Children's Portraits" },
   { src: "/photography/image3.jpg", label: "Studio Session" },
@@ -14,16 +15,30 @@ const SLIDES = [
   { src: "/photography/image9.jpg", label: "Portrait Session" },
 ];
 
-const N = SLIDES.length;
-// Duplicate slides so forward scroll wraps seamlessly
-const EXT = [...SLIDES, ...SLIDES];
-
 export default function Carousel() {
+  const [slides, setSlides] = useState(STATIC_SLIDES);
   const [idx, setIdx] = useState(0);
   const [animated, setAnimated] = useState(true);
   const [paused, setPaused] = useState(false);
   const [barKey, setBarKey] = useState(0);
   const busyRef = useRef(false);
+
+  // Fetch homepage photos from admin; fall back to static if none configured
+  useEffect(() => {
+    fetch("/api/photos/homepage")
+      .then((r) => r.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setSlides(
+            data.map((p) => ({ src: addWatermark(p.url), label: p.caption || "Our Work" }))
+          );
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const N = slides.length;
+  const EXT = [...slides, ...slides];
 
   function goNext() {
     if (busyRef.current) return;
@@ -34,7 +49,6 @@ export default function Carousel() {
     setIdx((i) => {
       const next = i + 1;
       if (next >= N) {
-        // Slide to EXT[N] (clone of first slide), then silently snap to 0
         setTimeout(() => {
           setAnimated(false);
           setIdx(0);
@@ -43,7 +57,7 @@ export default function Carousel() {
             busyRef.current = false;
           }, 40);
         }, 680);
-        return N; // momentarily show second copy
+        return N;
       }
       setTimeout(() => { busyRef.current = false; }, 680);
       return next;
@@ -57,7 +71,6 @@ export default function Carousel() {
 
     setIdx((i) => {
       if (i === 0) {
-        // Silently jump to N (end of first copy = same visuals), then animate to N-1
         setAnimated(false);
         setTimeout(() => {
           setIdx(N);
@@ -75,7 +88,6 @@ export default function Carousel() {
     });
   }
 
-  // Auto-advance using a ref to always call latest goNext
   const nextRef = useRef(goNext);
   useEffect(() => { nextRef.current = goNext; });
 
@@ -112,7 +124,6 @@ export default function Carousel() {
         </div>
       </div>
 
-      {/* Progress bar — resets on each advance */}
       {!paused && <div key={barKey} className={styles.progressBar} />}
 
       <button

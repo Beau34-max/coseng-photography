@@ -85,6 +85,8 @@
 }
 .iconBtn:hover { background: #e2e8f0; }
 .deleteBtn:hover { background: #fee2e2; color: #b91c1c; }
+.homepageActive { background: #dcfce7; color: #16a34a; }
+.homepageActive:hover { background: #bbf7d0; }
 
 .confirmDelete { display: flex; gap: 0.3rem; flex-wrap: wrap; }
 .confirmBtn {

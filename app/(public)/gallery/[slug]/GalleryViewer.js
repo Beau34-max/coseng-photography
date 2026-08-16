@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { FiX, FiChevronLeft, FiChevronRight, FiImage } from "react-icons/fi";
+import { addWatermark } from "@/lib/photo-utils";
 import styles from "./gallery-viewer.module.css";
 
 export default function GalleryViewer({ gallery, photos }) {
@@ -27,7 +28,7 @@ export default function GalleryViewer({ gallery, photos }) {
           <div className={styles.grid}>
             {photos.map((p, i) => (
               <button key={p._id} className={styles.thumb} onClick={() => setLightbox(i)}>
-                <img src={p.thumbnailUrl || p.url} alt={p.caption || `Photo ${i + 1}`} loading="lazy" />
+                <img src={addWatermark(p.thumbnailUrl || p.url)} alt={p.caption || `Photo ${i + 1}`} loading="lazy" />
               </button>
             ))}
           </div>
@@ -39,7 +40,7 @@ export default function GalleryViewer({ gallery, photos }) {
           <button className={styles.lbClose} onClick={() => setLightbox(null)}><FiX size={24} /></button>
           <button className={styles.lbPrev} onClick={(e) => { e.stopPropagation(); prev(); }}><FiChevronLeft size={32} /></button>
           <div className={styles.lbImgWrap} onClick={(e) => e.stopPropagation()}>
-            <img src={photos[lightbox].url} alt={photos[lightbox].caption || ""} className={styles.lbImg} />
+            <img src={addWatermark(photos[lightbox].url)} alt={photos[lightbox].caption || ""} className={styles.lbImg} />
             {photos[lightbox].caption && <p className={styles.lbCaption}>{photos[lightbox].caption}</p>}
             <p className={styles.lbCounter}>{lightbox + 1} / {photos.length}</p>
           </div>

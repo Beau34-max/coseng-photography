@@ -1,7 +1,7 @@
 "use client";
 import { useState, useCallback } from "react";
 import Image from "next/image";
-import { FiUploadCloud, FiTrash2, FiStar, FiCheck, FiAlertCircle } from "react-icons/fi";
+import { FiUploadCloud, FiTrash2, FiStar, FiCheck, FiAlertCircle, FiHome } from "react-icons/fi";
 import styles from "./gallery-editor.module.css";
 
 export default function GalleryEditor({ gallery: initial, photos: initialPhotos }) {
@@ -59,7 +59,11 @@ export default function GalleryEditor({ gallery: initial, photos: initialPhotos 
         const up = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
           method: "POST", body: fd,
         });
-        if (!up.ok) throw new Error("Cloudinary upload failed");
+        if (!up.ok) {
+          const errBody = await up.text();
+          console.error("Cloudinary error:", up.status, errBody);
+          throw new Error(`Cloudinary upload failed (${up.status}): ${errBody}`);
+        }
         cloudinaryResults.push(await up.json());
       }
 
@@ -94,6 +98,17 @@ export default function GalleryEditor({ gallery: initial, photos: initialPhotos 
       showFlash("Photo deleted");
     } catch { showFlash("Delete failed"); }
     setDeleteId(null);
+  }
+
+  async function toggleHomepage(photo) {
+    const next = !photo.showOnHomepage;
+    setPhotos((p) => p.map((x) => x._id === photo._id ? { ...x, showOnHomepage: next } : x));
+    await fetch(`/api/photos/${photo._id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ showOnHomepage: next }),
+    });
+    showFlash(next ? "Added to homepage carousel" : "Removed from homepage carousel");
   }
 
   async function setCover(photo) {
@@ -183,6 +198,13 @@ export default function GalleryEditor({ gallery: initial, photos: initialPhotos 
                     )}
                   </div>
                   <div className={styles.photoActions}>
+                    <button
+                      onClick={() => toggleHomepage(photo)}
+                      className={`${styles.iconBtn} ${photo.showOnHomepage ? styles.homepageActive : ""}`}
+                      title={photo.showOnHomepage ? "Remove from homepage carousel" : "Show on homepage carousel"}
+                    >
+                      <FiHome size={14} />
+                    </button>
                     {gallery.coverImage !== photo.url && (
                       <button onClick={() => setCover(photo)} className={styles.iconBtn} title="Set as cover"><FiStar size={14} /></button>
                     )}

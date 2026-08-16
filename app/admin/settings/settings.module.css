@@ -1,4 +1,4 @@
-.page { padding: 2rem; max-width: 900px; }
+.page { padding: 2rem; max-width: 960px; }
 .flash {
   position: fixed; top: 1.5rem; right: 1.5rem; z-index: 100;
   display: flex; align-items: center; gap: 0.5rem;
@@ -16,24 +16,64 @@
 }
 .saveBtn:hover:not(:disabled) { background: #1f2937; }
 .saveBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+
 .section {
   background: #fff; border-radius: 12px; padding: 1.5rem;
   box-shadow: 0 1px 3px rgba(0,0,0,0.06); margin-bottom: 1.5rem;
 }
-.section h2 { font-size: 1rem; font-weight: 700; color: #0d1117; margin: 0 0 0.25rem; }
-.hint { font-size: 0.82rem; color: #6b7280; margin: 0 0 1.25rem; }
+.section h2 {
+  font-size: 1rem; font-weight: 700; color: #0d1117; margin: 0 0 0.25rem;
+  display: flex; align-items: center;
+}
+.sectionHead { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.25rem; }
+.sectionHead > div { flex: 1; }
+.hint { font-size: 0.82rem; color: #6b7280; margin: 0; }
+
+.addBtn {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.5rem 1rem; background: #f0fdf4; color: #16a34a;
+  border: 1px solid #bbf7d0; border-radius: 8px; font-size: 0.85rem;
+  font-weight: 600; cursor: pointer; white-space: nowrap;
+  transition: background 0.2s; font-family: inherit;
+}
+.addBtn:hover { background: #dcfce7; }
+
 .packageGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.packageCard { border: 1px solid #e5e7eb; border-radius: 10px; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; }
+.packageCard {
+  border: 1px solid #e5e7eb; border-radius: 10px; padding: 1rem;
+  display: flex; flex-direction: column; gap: 0.75rem;
+}
+.pkgCardHead { display: flex; align-items: flex-start; gap: 0.5rem; }
+.removeBtn {
+  flex-shrink: 0; margin-top: 22px;
+  width: 30px; height: 30px; border: none; border-radius: 6px;
+  background: #fef2f2; color: #b91c1c; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s; font-family: inherit;
+}
+.removeBtn:hover { background: #fee2e2; }
+
 .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
 .field { display: flex; flex-direction: column; gap: 0.3rem; }
 .field label { font-size: 0.75rem; font-weight: 600; color: #374151; }
-.field input {
+.field input, .select {
   padding: 0.55rem 0.75rem; border: 1px solid #d1d5db; border-radius: 7px;
   font-size: 0.88rem; color: #0d1117; background: #f9fafb;
-  box-sizing: border-box; font-family: inherit;
+  box-sizing: border-box; font-family: inherit; width: 100%;
 }
-.field input:focus { outline: none; border-color: #6d28d9; background: #fff; }
+.field input:focus, .select:focus { outline: none; border-color: #6a994e; background: #fff; }
+
+/* Add admin */
+.adminForm { display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem; }
+.adminFlash {
+  padding: 0.6rem 1rem; border-radius: 7px; font-size: 0.875rem;
+  font-weight: 500; margin-bottom: 0.5rem;
+}
+.adminFlashOk { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+.adminFlashErr { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+
 @media (max-width: 700px) {
   .packageGrid { grid-template-columns: 1fr; }
   .row { grid-template-columns: 1fr; }
+  .sectionHead { flex-direction: column; gap: 0.75rem; }
 }
