@@ -39,6 +39,7 @@ export default function ContactPage() {
               <div className={styles.infoList}>
                 <div className={styles.infoItem}><FiMail size={20} /><div><strong>Email</strong><span>photography@coseng.co.uk</span></div></div>
                 <div className={styles.infoItem}><FiPhone size={20} /><div><strong>Phone</strong><span>+44 191 603 0219</span></div></div>
+                <div className={styles.infoItem}><FiPhone size={20} /><div><strong>Mobile</strong><span>+44 7776 755526</span></div></div>
                 <div className={styles.infoItem}><FiMapPin size={20} /><div><strong>Location</strong><span>Quorum Business Park, NE12 8BU</span></div></div>
               </div>
               <div className={styles.social}>

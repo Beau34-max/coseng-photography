@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { FiCamera, FiMail, FiInstagram, FiFacebook } from "react-icons/fi";
+import Image from "next/image";
+import { FiMail, FiInstagram, FiFacebook } from "react-icons/fi";
 import styles from "./PublicFooter.module.css";
 
 export default function PublicFooter() {
@@ -8,8 +9,8 @@ export default function PublicFooter() {
       <div className={styles.inner}>
         <div className={styles.brand}>
           <div className={styles.logo}>
-            <FiCamera size={20} />
-            <span>COSENG <em>Photography</em></span>
+            <Image src="/images/cosenglogo.png" alt="COSENG" width={100} height={32} style={{ objectFit: "contain" }} />
+            <em>Photography</em>
           </div>
           <p>Professional photography across Newcastle &amp; the North East. Capturing moments that matter.</p>
           <div className={styles.socials}>
@@ -34,6 +35,7 @@ export default function PublicFooter() {
           <h4>Contact</h4>
           <a href="mailto:photography@coseng.co.uk">photography@coseng.co.uk</a>
           <a href="tel:+441916030219">+44 191 603 0219</a>
+          <a href="tel:+447776755526">+44 7776 755526</a>
           <span>Newcastle &amp; the North East</span>
         </div>
       </div>

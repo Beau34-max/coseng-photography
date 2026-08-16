@@ -1,8 +1,9 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { FiMenu, FiX, FiCamera } from "react-icons/fi";
+import { FiMenu, FiX } from "react-icons/fi";
 import styles from "./PublicNav.module.css";
 
 const links = [
@@ -21,8 +22,8 @@ export default function PublicNav() {
     <nav className={styles.nav}>
       <div className={styles.inner}>
         <Link href="/" className={styles.logo}>
-          <FiCamera size={22} />
-          <span>COSENG <em>Photography</em></span>
+          <Image src="/images/cosenglogo.png" alt="COSENG" width={110} height={36} style={{ objectFit: "contain" }} />
+          <em>Photography</em>
         </Link>
 
         <ul className={`${styles.links} ${open ? styles.mobileOpen : ""}`}>
