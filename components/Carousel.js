@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import styles from "./Carousel.module.css";
 
@@ -14,55 +14,94 @@ const SLIDES = [
   { src: "/photography/image9.jpg", label: "Portrait Session" },
 ];
 
-const SPEED = 0.55; // pixels per frame
+const N = SLIDES.length;
+// Duplicate slides so forward scroll wraps seamlessly
+const EXT = [...SLIDES, ...SLIDES];
 
 export default function Carousel() {
-  const trackRef = useRef(null);
-  const posRef = useRef(0);
-  const pausedRef = useRef(false);
-  const slideWRef = useRef(0);
-  const totalWRef = useRef(0);
-  const rafRef = useRef(null);
+  const [idx, setIdx] = useState(0);
+  const [animated, setAnimated] = useState(true);
+  const [paused, setPaused] = useState(false);
+  const [barKey, setBarKey] = useState(0);
+  const busyRef = useRef(false);
+
+  function goNext() {
+    if (busyRef.current) return;
+    busyRef.current = true;
+    setAnimated(true);
+    setBarKey((k) => k + 1);
+
+    setIdx((i) => {
+      const next = i + 1;
+      if (next >= N) {
+        // Slide to EXT[N] (clone of first slide), then silently snap to 0
+        setTimeout(() => {
+          setAnimated(false);
+          setIdx(0);
+          setTimeout(() => {
+            setAnimated(true);
+            busyRef.current = false;
+          }, 40);
+        }, 680);
+        return N; // momentarily show second copy
+      }
+      setTimeout(() => { busyRef.current = false; }, 680);
+      return next;
+    });
+  }
+
+  function goPrev() {
+    if (busyRef.current) return;
+    busyRef.current = true;
+    setBarKey((k) => k + 1);
+
+    setIdx((i) => {
+      if (i === 0) {
+        // Silently jump to N (end of first copy = same visuals), then animate to N-1
+        setAnimated(false);
+        setTimeout(() => {
+          setIdx(N);
+          setTimeout(() => {
+            setAnimated(true);
+            setIdx(N - 1);
+            setTimeout(() => { busyRef.current = false; }, 680);
+          }, 40);
+        }, 0);
+        return 0;
+      }
+      setAnimated(true);
+      setTimeout(() => { busyRef.current = false; }, 680);
+      return i - 1;
+    });
+  }
+
+  // Auto-advance using a ref to always call latest goNext
+  const nextRef = useRef(goNext);
+  useEffect(() => { nextRef.current = goNext; });
 
   useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    const firstSlide = track.firstElementChild;
-    const w = firstSlide.offsetWidth + 6; // +6 for gap
-    slideWRef.current = w;
-    totalWRef.current = w * SLIDES.length;
-
-    const animate = () => {
-      if (!pausedRef.current) {
-        posRef.current -= SPEED;
-        if (Math.abs(posRef.current) >= totalWRef.current) {
-          posRef.current = 0;
-        }
-        track.style.transform = `translateX(${posRef.current}px)`;
-      }
-      rafRef.current = requestAnimationFrame(animate);
-    };
-
-    rafRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, []);
-
-  function jump(dir) {
-    if (!slideWRef.current) return;
-    posRef.current += dir * slideWRef.current;
-    if (posRef.current > 0) posRef.current = -(totalWRef.current - slideWRef.current);
-    if (Math.abs(posRef.current) >= totalWRef.current) posRef.current = 0;
-  }
+    if (paused) return;
+    const t = setInterval(() => nextRef.current(), 4000);
+    return () => clearInterval(t);
+  }, [paused]);
 
   return (
     <section
       className={styles.carousel}
-      onMouseEnter={() => { pausedRef.current = true; }}
-      onMouseLeave={() => { pausedRef.current = false; }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
     >
       <div className={styles.viewport}>
-        <div ref={trackRef} className={styles.track}>
-          {[...SLIDES, ...SLIDES].map((slide, i) => (
+        <div
+          className={styles.track}
+          style={{
+            transform: `translateX(calc(${-idx} * var(--slide-w)))`,
+            transition: animated
+              ? "transform 0.65s cubic-bezier(0.4, 0, 0.2, 1)"
+              : "none",
+          }}
+        >
+          {EXT.map((slide, i) => (
             <div key={i} className={styles.slide}>
               <img src={slide.src} alt={slide.label} />
               <div className={styles.caption}>
@@ -73,16 +112,19 @@ export default function Carousel() {
         </div>
       </div>
 
+      {/* Progress bar — resets on each advance */}
+      {!paused && <div key={barKey} className={styles.progressBar} />}
+
       <button
         className={`${styles.arrow} ${styles.arrowLeft}`}
-        onClick={() => jump(1)}
+        onClick={goPrev}
         aria-label="Previous"
       >
         <FiChevronLeft size={30} />
       </button>
       <button
         className={`${styles.arrow} ${styles.arrowRight}`}
-        onClick={() => jump(-1)}
+        onClick={goNext}
         aria-label="Next"
       >
         <FiChevronRight size={30} />

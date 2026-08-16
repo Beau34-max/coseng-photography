@@ -1,4 +1,6 @@
+/* 3 images visible on desktop, 2 on tablet, 1 on mobile */
 .carousel {
+  --slide-w: calc(100vw / 3);
   position: relative;
   width: 100%;
   height: 72vh;
@@ -16,15 +18,16 @@
 .track {
   display: flex;
   height: 100%;
-  gap: 6px;
   will-change: transform;
 }
 
 .slide {
   position: relative;
   flex-shrink: 0;
-  width: 62vw;
+  width: var(--slide-w);
   height: 100%;
+  padding: 0 3px;
+  box-sizing: border-box;
 }
 
 .slide img {
@@ -45,15 +48,32 @@
   display: inline-block;
   background: rgba(0, 0, 0, 0.5);
   color: #fff;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  padding: 0.35rem 1rem;
+  padding: 0.3rem 0.9rem;
   border-radius: 999px;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.07em;
   backdrop-filter: blur(6px);
 }
 
+/* Progress bar — the "pulse" that shows time before next slide */
+.progressBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: #a8d48a;
+  z-index: 10;
+  animation: fillBar 4s linear forwards;
+}
+
+@keyframes fillBar {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+/* Arrows */
 .arrow {
   position: absolute;
   top: 50%;
@@ -74,13 +94,16 @@
 }
 
 .arrow:hover { background: rgba(255, 255, 255, 0.28); }
-.arrowLeft { left: 1.25rem; }
+.arrowLeft  { left: 1.25rem; }
 .arrowRight { right: 1.25rem; }
 
-@media (max-width: 768px) {
-  .carousel { height: 55vh; min-height: 360px; }
-  .slide { width: 85vw; }
+@media (max-width: 900px) {
+  .carousel { --slide-w: calc(100vw / 2); height: 60vh; }
+}
+
+@media (max-width: 600px) {
+  .carousel { --slide-w: 100vw; height: 55vh; min-height: 360px; }
   .arrow { width: 42px; height: 42px; }
-  .arrowLeft { left: 0.5rem; }
+  .arrowLeft  { left: 0.5rem; }
   .arrowRight { right: 0.5rem; }
 }
