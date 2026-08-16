@@ -49,6 +49,7 @@ export default function ClientLoginPage() {
         <p className={styles.help}>
           Don&apos;t have an access code? <a href="mailto:photography@coseng.co.uk">Contact us</a>
         </p>
+        <a href="/" className={styles.homeLink}>← Back to Home</a>
       </div>
     </div>
   );

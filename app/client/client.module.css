@@ -12,3 +12,5 @@
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .help { margin-top: 1.5rem; font-size: 0.82rem; color: #999; }
 .help a { color: #c2185b; }
+.homeLink { display: inline-block; margin-top: 1rem; font-size: 0.8rem; color: #aaa; text-decoration: none; }
+.homeLink:hover { color: #666; }

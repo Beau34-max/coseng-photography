@@ -38,8 +38,8 @@ export default function ContactPage() {
               <h2>Contact Information</h2>
               <div className={styles.infoList}>
                 <div className={styles.infoItem}><FiMail size={20} /><div><strong>Email</strong><span>photography@coseng.co.uk</span></div></div>
-                <div className={styles.infoItem}><FiPhone size={20} /><div><strong>Phone</strong><span>+44 20 0000 0000</span></div></div>
-                <div className={styles.infoItem}><FiMapPin size={20} /><div><strong>Location</strong><span>London, United Kingdom</span></div></div>
+                <div className={styles.infoItem}><FiPhone size={20} /><div><strong>Phone</strong><span>+44 191 603 0219</span></div></div>
+                <div className={styles.infoItem}><FiMapPin size={20} /><div><strong>Location</strong><span>Quorum Business Park, NE12 8BU</span></div></div>
               </div>
               <div className={styles.social}>
                 <a href="#" className={styles.socialLink}><FiInstagram size={20} /></a>
