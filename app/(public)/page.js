@@ -22,7 +22,7 @@ const services = [
   { Icon: FiStar, title: "Portrait Sessions", desc: "Individual and family portraits in studio or on location across the North East.", from: "£150" },
   { Icon: FiCalendar, title: "Events & Occasions", desc: "Birthdays, graduations, community events — we capture every moment.", from: "£200" },
   { Icon: FiImage, title: "Commercial", desc: "Professional shots for businesses, brands and organisations.", from: "£300" },
-  { Icon: FiUser, title: "Charity & Community", desc: "Supporting charities and community groups across Newcastle.", from: "POA" },
+  { Icon: FiUser, title: "Charity & Community", desc: "Supporting charities and community groups across Newcastle. 4hrs — extra £100/hr thereafter.", from: "£400" },
 ];
 
 const stats = [
