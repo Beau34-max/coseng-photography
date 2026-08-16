@@ -24,10 +24,11 @@ export async function POST(req) {
     for (const file of files) {
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
-      const result = await uploadPhoto(buffer, { folder: `coseng-photography/${galleryId}` });
+      const base64 = `data:${file.type};base64,${buffer.toString("base64")}`;
+      const result = await uploadPhoto(base64, `coseng-photography/${galleryId}`);
       const photo = {
-        galleryId, publicId: result.public_id,
-        url: result.secure_url, width: result.width, height: result.height,
+        galleryId, publicId: result.publicId,
+        url: result.url, width: result.width, height: result.height,
         format: result.format, caption: "", isCover: false, order: 0,
         uploadedAt: new Date(), uploadedBy: admin.email,
       };
