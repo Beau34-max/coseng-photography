@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FiUploadCloud, FiTrash2, FiStar, FiCheck, FiHome, FiSettings, FiGrid, FiActivity, FiEye, FiLink, FiDroplet } from "react-icons/fi";
 import styles from "./gallery-editor.module.css";
 
@@ -10,6 +10,13 @@ const TABS = [
 ];
 
 export default function GalleryEditor({ gallery: initial, photos: initialPhotos }) {
+  useEffect(() => {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://fonts.googleapis.com/css2?family=Allura&display=swap";
+    document.head.appendChild(link);
+  }, []);
+
   const [gallery, setGallery] = useState(initial);
   const [photos, setPhotos] = useState(initialPhotos);
   const [tab, setTab] = useState("organize");
