@@ -16,13 +16,13 @@ const STATIC_SLIDES = [
 ];
 
 export default function Carousel() {
-  const [slides, setSlides]       = useState(STATIC_SLIDES);
-  const [idx, setIdx]             = useState(0);
-  const [fading, setFading]       = useState(false);
-  const [paused, setPaused]       = useState(false);
-  const [barKey, setBarKey]       = useState(0);
-  const busyRef                   = useRef(false);
-  const nextRef                   = useRef(null);
+  const [slides, setSlides]     = useState(STATIC_SLIDES);
+  const [idx, setIdx]           = useState(0);
+  const [animated, setAnimated] = useState(true);
+  const [paused, setPaused]     = useState(false);
+  const [barKey, setBarKey]     = useState(0);
+  const busyRef                 = useRef(false);
+  const nextRef                 = useRef(null);
 
   useEffect(() => {
     fetch("/api/photos/homepage")
@@ -38,20 +38,53 @@ export default function Carousel() {
       .catch(() => {});
   }, []);
 
-  function goTo(newIdx) {
+  const N   = slides.length;
+  // Duplicate for seamless loop: [...slides, ...slides]
+  const EXT = [...slides, ...slides];
+
+  function goNext() {
     if (busyRef.current) return;
     busyRef.current = true;
-    setFading(true);
-    setTimeout(() => {
-      setIdx(newIdx);
-      setFading(false);
-      setBarKey((k) => k + 1);
-      setTimeout(() => { busyRef.current = false; }, 100);
-    }, 320);
+    setAnimated(true);
+    setBarKey((k) => k + 1);
+    setIdx((i) => {
+      const next = i + 1;
+      if (next >= N) {
+        // Silent reset after transition
+        setTimeout(() => {
+          setAnimated(false);
+          setIdx(0);
+          setTimeout(() => { setAnimated(true); busyRef.current = false; }, 40);
+        }, 650);
+        return N; // momentarily land on duplicate
+      }
+      setTimeout(() => { busyRef.current = false; }, 650);
+      return next;
+    });
   }
 
-  function goNext() { goTo((idx + 1) % slides.length); }
-  function goPrev() { goTo((idx - 1 + slides.length) % slides.length); }
+  function goPrev() {
+    if (busyRef.current) return;
+    busyRef.current = true;
+    setBarKey((k) => k + 1);
+    setIdx((i) => {
+      if (i === 0) {
+        setAnimated(false);
+        setTimeout(() => {
+          setIdx(N);
+          setTimeout(() => {
+            setAnimated(true);
+            setIdx(N - 1);
+            setTimeout(() => { busyRef.current = false; }, 650);
+          }, 40);
+        }, 0);
+        return 0;
+      }
+      setAnimated(true);
+      setTimeout(() => { busyRef.current = false; }, 650);
+      return i - 1;
+    });
+  }
 
   useEffect(() => { nextRef.current = goNext; });
 
@@ -61,7 +94,7 @@ export default function Carousel() {
     return () => clearInterval(t);
   }, [paused]);
 
-  const slide = slides[idx];
+  const displayIdx = idx % N; // for dots
 
   return (
     <section
@@ -69,26 +102,37 @@ export default function Carousel() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className={`${styles.slideWrap} ${fading ? styles.fading : ""}`}>
-        <img
-          key={slide.src}
-          src={slide.src}
-          alt={slide.label}
-          className={styles.photo}
-        />
-        <div className={styles.caption}>
-          <span>{slide.label}</span>
-        </div>
+      <div
+        className={styles.track}
+        style={{
+          transform: `translateX(calc(${-idx} * 100vw))`,
+          transition: animated ? "transform 0.65s cubic-bezier(0.4,0,0.2,1)" : "none",
+        }}
+      >
+        {EXT.map((slide, i) => (
+          <div key={i} className={styles.slide}>
+            <img src={slide.src} alt={slide.label} className={styles.photo} />
+            <div className={styles.caption}><span>{slide.label}</span></div>
+          </div>
+        ))}
       </div>
 
-      {/* Dots */}
-      {slides.length > 1 && (
+      {/* Dot indicators */}
+      {N > 1 && (
         <div className={styles.dots}>
           {slides.map((_, i) => (
             <button
               key={i}
-              className={`${styles.dot} ${i === idx ? styles.dotActive : ""}`}
-              onClick={() => goTo(i)}
+              className={`${styles.dot} ${i === displayIdx ? styles.dotActive : ""}`}
+              onClick={() => {
+                if (!busyRef.current) {
+                  busyRef.current = true;
+                  setAnimated(true);
+                  setIdx(i);
+                  setBarKey((k) => k + 1);
+                  setTimeout(() => { busyRef.current = false; }, 650);
+                }
+              }}
               aria-label={`Go to slide ${i + 1}`}
             />
           ))}
