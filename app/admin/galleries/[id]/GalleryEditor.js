@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { FiUploadCloud, FiTrash2, FiStar, FiCheck, FiHome, FiSettings, FiGrid, FiActivity, FiEye, FiLink } from "react-icons/fi";
+import { FiUploadCloud, FiTrash2, FiStar, FiCheck, FiHome, FiSettings, FiGrid, FiActivity, FiEye, FiLink, FiDroplet } from "react-icons/fi";
 import styles from "./gallery-editor.module.css";
 
 const TABS = [
@@ -250,6 +250,40 @@ export default function GalleryEditor({ gallery: initial, photos: initialPhotos 
                     To pin specific photos instead, use the <FiHome size={11} /> icon in the Organize tab.
                   </p>
                 </div>
+              </div>
+            </div>
+
+            <div className={styles.section}>
+              <h3><FiDroplet size={14} style={{ marginRight: 6 }} />Watermark & Signature</h3>
+              <p className={styles.sectionHint}>Protect your work with the COSENG Photography signature.</p>
+              <div className={styles.field}>
+                <label className={styles.toggle}>
+                  <input type="checkbox" checked={!!gallery.showWatermark} onChange={(e) => setGallery((g) => ({ ...g, showWatermark: e.target.checked }))} />
+                  <span>Apply to public gallery photos</span>
+                </label>
+              </div>
+              <div className={styles.field}>
+                <label className={styles.toggle}>
+                  <input type="checkbox" checked={!!gallery.watermarkClient} onChange={(e) => setGallery((g) => ({ ...g, watermarkClient: e.target.checked }))} />
+                  <span>Apply to client delivery photos</span>
+                </label>
+              </div>
+              <div className={styles.field}>
+                <label>Position</label>
+                <select
+                  className={styles.select}
+                  value={gallery.watermarkPosition || "south_east"}
+                  onChange={(e) => setGallery((g) => ({ ...g, watermarkPosition: e.target.value }))}
+                >
+                  <option value="south_east">Bottom Right</option>
+                  <option value="south_west">Bottom Left</option>
+                  <option value="south">Bottom Centre</option>
+                  <option value="north_east">Top Right</option>
+                  <option value="north_west">Top Left</option>
+                </select>
+              </div>
+              <div className={styles.watermarkPreview}>
+                <span className={styles.watermarkText}>COSENG Photography</span>
               </div>
             </div>
 

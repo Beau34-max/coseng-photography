@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { FiDownload, FiHeart, FiX, FiChevronLeft, FiChevronRight, FiCamera } from "react-icons/fi";
+import { addWatermark } from "@/lib/photo-utils";
 import styles from "./client-gallery.module.css";
 
 export default function ClientGalleryClient({ gallery, photos, accessCode }) {
@@ -30,6 +31,10 @@ export default function ClientGalleryClient({ gallery, photos, accessCode }) {
       setSavingFav((s) => { const n = new Set(s); n.delete(photoId); return n; });
     }
   }
+
+  const wm = (url) => gallery.watermarkClient
+    ? addWatermark(url, gallery.watermarkPosition || "south_east")
+    : url;
 
   function prev() { setLightbox((i) => (i > 0 ? i - 1 : displayed.length - 1)); }
   function next() { setLightbox((i) => (i < displayed.length - 1 ? i + 1 : 0)); }
@@ -80,7 +85,7 @@ export default function ClientGalleryClient({ gallery, photos, accessCode }) {
             {displayed.map((p, i) => (
               <div key={p._id} className={styles.thumb}>
                 <img
-                  src={p.thumbnailUrl || p.url}
+                  src={wm(p.thumbnailUrl || p.url)}
                   alt={p.caption || `Photo ${i + 1}`}
                   loading="lazy"
                   onClick={() => setLightbox(i)}
