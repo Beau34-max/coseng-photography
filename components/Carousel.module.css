@@ -1,10 +1,9 @@
-/* 3 images visible on desktop, 2 on tablet, 1 on mobile */
+/* 1 photo at a time, full width */
 .carousel {
-  --slide-w: calc(100vw / 3);
   position: relative;
   width: 100%;
-  height: 65vh;
-  min-height: 440px;
+  height: 80vh;
+  min-height: 520px;
   background: #111827;
   overflow: hidden;
 }
@@ -24,14 +23,12 @@
 .slide {
   position: relative;
   flex-shrink: 0;
-  width: var(--slide-w);
+  width: 100vw;
   height: 100%;
-  padding: 0 3px;
-  box-sizing: border-box;
   overflow: hidden;
 }
 
-/* Blurred photo fill — background behind the contained image */
+/* Blurred photo backdrop so portrait photos have no harsh bars */
 .slide::before {
   content: '';
   position: absolute;
@@ -48,31 +45,31 @@
   z-index: 1;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: top center;
+  object-fit: contain;
   display: block;
 }
 
 .caption {
   position: absolute;
-  bottom: 1.25rem;
-  left: 1.25rem;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  z-index: 2;
 }
 
 .caption span {
   display: inline-block;
   background: rgba(0, 0, 0, 0.5);
   color: #fff;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  padding: 0.3rem 0.9rem;
+  padding: 0.35rem 1rem;
   border-radius: 999px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   backdrop-filter: blur(6px);
 }
 
-/* Progress bar — the "pulse" that shows time before next slide */
+/* Progress bar */
 .progressBar {
   position: absolute;
   bottom: 0;
@@ -112,12 +109,8 @@
 .arrowLeft  { left: 1.25rem; }
 .arrowRight { right: 1.25rem; }
 
-@media (max-width: 900px) {
-  .carousel { --slide-w: calc(100vw / 2); height: 60vh; min-height: 400px; }
-}
-
 @media (max-width: 600px) {
-  .carousel { --slide-w: 100vw; height: 55vh; min-height: 360px; }
+  .carousel { height: 60vh; min-height: 360px; }
   .arrow { width: 42px; height: 42px; }
   .arrowLeft  { left: 0.5rem; }
   .arrowRight { right: 0.5rem; }

@@ -109,7 +109,7 @@ export default function Carousel() {
         <div
           className={styles.track}
           style={{
-            transform: `translateX(calc(${-idx} * var(--slide-w)))`,
+            transform: `translateX(calc(${-idx} * 100vw))`,
             transition: animated
               ? "transform 0.65s cubic-bezier(0.4, 0, 0.2, 1)"
               : "none",
