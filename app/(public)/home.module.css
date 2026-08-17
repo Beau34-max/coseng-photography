@@ -89,4 +89,4 @@
 /* ── RESPONSIVE ── */
 @media (max-width: 1024px) { .servicesGrid { grid-template-columns: 1fr 1fr; } .galleryGrid { grid-template-columns: 1fr 1fr; } .heroStats { grid-template-columns: repeat(4, 1fr); } }
 @media (max-width: 768px) { .heroStats { grid-template-columns: 1fr 1fr; } .clientCtaGrid { grid-template-columns: 1fr; gap: 2rem; } }
-@media (max-width: 600px) { .servicesGrid { grid-template-columns: 1fr; } .galleryGrid { grid-template-columns: 1fr; } .heroCtas { flex-direction: column; } .carouselSection { padding-top: 2rem; } .services { padding: 3rem 1.5rem; } }
+@media (max-width: 600px) { .servicesGrid { grid-template-columns: 1fr; } .galleryGrid { grid-template-columns: 1fr; } .heroCtas { flex-direction: column; } }
