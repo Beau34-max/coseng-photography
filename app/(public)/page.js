@@ -24,18 +24,6 @@ async function getHeroSettings() {
   }
 }
 
-async function getFeaturedGalleries() {
-  try {
-    const db = await connectToDb();
-    return db.collection("galleries")
-      .find({ isPublic: true, featured: true })
-      .sort({ createdAt: -1 })
-      .limit(6)
-      .toArray()
-      .then((gs) => gs.map((g) => ({ ...g, _id: g._id.toString() })));
-  } catch { return []; }
-}
-
 const SERVICE_DEFS = [
   { category: "Portrait",   title: "Portrait Sessions",    desc: "Individual and family portraits in studio or on location across the North East.", from: "£150", gradient: "linear-gradient(135deg,#1a1a2e 0%,#2d3561 100%)" },
   { category: "Event",      title: "Events & Occasions",   desc: "Birthdays, graduations, community events — we capture every moment.", from: "£200", gradient: "linear-gradient(135deg,#0f2027 0%,#203a43 50%,#2c5364 100%)" },
@@ -66,7 +54,7 @@ const stats = [
 ];
 
 export default async function HomePage() {
-  const [featured, hero, servicePhotos] = await Promise.all([getFeaturedGalleries(), getHeroSettings(), getServicePhotos()]);
+  const [hero, servicePhotos] = await Promise.all([getHeroSettings(), getServicePhotos()]);
 
   const heroStyle = hero.backgroundImage
     ? { backgroundImage: `url(${hero.backgroundImage})` }
@@ -141,38 +129,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* FEATURED GALLERIES */}
-      {featured.length > 0 && (
-        <section className={styles.featured}>
-          <div className={styles.sectionInner}>
-            <div className={styles.sectionHeader}>
-              <span className={styles.sectionTag}>Our Work</span>
-              <h2>Featured Galleries</h2>
-              <p>A selection of our recent photography work.</p>
-            </div>
-            <div className={styles.galleryGrid}>
-              {featured.map((g) => (
-                <Link href={`/gallery/${g.slug}`} key={g._id} className={styles.galleryCard}>
-                  <div className={styles.galleryImg} style={{ background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)" }}>
-                    {g.coverUrl && (
-                      <img src={g.coverUrl} alt={g.title} loading="lazy" />
-                    )}
-                    <span className={styles.galleryCount}><FiImage size={13} /> {g.photoCount || 0} photos</span>
-                  </div>
-                  <div className={styles.galleryInfo}>
-                    <h3>{g.title}</h3>
-                    <p>{g.category}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-            <div className={styles.viewAll}>
-              <Link href="/gallery" className={styles.viewAllBtn}>View All Galleries →</Link>
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* CLIENT PORTAL CTA */}
       <section className={styles.clientCta}>
