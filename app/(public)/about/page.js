@@ -46,15 +46,19 @@ export default function AboutPage() {
           <h2 className={styles.sectionTitle}>What We Offer</h2>
           <div className={styles.servicesGrid}>
             {[
-              { title: "Wedding Photography", desc: "Full-day coverage of your most special day, from getting ready to the last dance.", icon: "💍" },
-              { title: "Portrait Sessions", desc: "Individual, family, or professional headshot sessions in studio or on location.", icon: "🎨" },
-              { title: "Event Photography", desc: "Birthdays, corporate events, parties — we capture the energy and emotion.", icon: "🎉" },
-              { title: "Commercial Photography", desc: "Product and brand photography for businesses looking to stand out.", icon: "📸" },
-            ].map(({ title, desc, icon }) => (
+              { title: "Wedding Photography",   desc: "Full-day coverage of your most special day, from getting ready to the last dance.",           img: "/photography/image1.jpg" },
+              { title: "Portrait Sessions",     desc: "Individual, family, or professional headshot sessions in studio or on location.",             img: "/photography/image4.jpg" },
+              { title: "Event Photography",     desc: "Birthdays, corporate events, parties — we capture the energy and emotion.",                  img: "/photography/image6.jpg" },
+              { title: "Commercial Photography",desc: "Product and brand photography for businesses looking to stand out.",                          img: "/photography/image7.jpg" },
+            ].map(({ title, desc, img }) => (
               <div key={title} className={styles.serviceCard}>
-                <span className={styles.serviceIcon}>{icon}</span>
-                <h3>{title}</h3>
-                <p>{desc}</p>
+                <div className={styles.servicePhoto}>
+                  <img src={img} alt={title} />
+                </div>
+                <div className={styles.serviceBody}>
+                  <h3>{title}</h3>
+                  <p>{desc}</p>
+                </div>
               </div>
             ))}
           </div>
