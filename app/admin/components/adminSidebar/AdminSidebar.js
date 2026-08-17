@@ -1,11 +1,12 @@
 "use client";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { FiGrid, FiImage, FiCalendar, FiUsers, FiSettings, FiLogOut, FiCamera, FiBarChart2, FiFileText } from "react-icons/fi";
+import { FiGrid, FiImage, FiCalendar, FiUsers, FiSettings, FiLogOut, FiCamera, FiBarChart2, FiFileText, FiHome } from "react-icons/fi";
 import styles from "./AdminSidebar.module.css";
 
 const nav = [
   { href: "/admin/dashboard", label: "Dashboard", Icon: FiGrid },
+  { href: "/admin/homepage",  label: "Homepage",  Icon: FiHome },
   { href: "/admin/galleries", label: "Galleries", Icon: FiImage },
   { href: "/admin/bookings", label: "Bookings", Icon: FiCalendar },
   { href: "/admin/clients", label: "Clients", Icon: FiUsers },

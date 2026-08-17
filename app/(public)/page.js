@@ -6,6 +6,24 @@ import styles from "./home.module.css";
 
 export const revalidate = 60;
 
+const HERO_DEFAULTS = {
+  title: "Capturing Moments",
+  titleAccent: "That Last Forever",
+  subtitle:
+    "Professional photography for portraits, events, commercial and community work. Delivering stunning images across Newcastle and the North East.",
+  backgroundImage: null,
+};
+
+async function getHeroSettings() {
+  try {
+    const db = await connectToDb();
+    const doc = await db.collection("settings").findOne({ key: "homepage" });
+    return { ...HERO_DEFAULTS, ...(doc?.hero || {}) };
+  } catch {
+    return HERO_DEFAULTS;
+  }
+}
+
 async function getFeaturedGalleries() {
   try {
     const db = await connectToDb();
@@ -33,24 +51,25 @@ const stats = [
 ];
 
 export default async function HomePage() {
-  const featured = await getFeaturedGalleries();
+  const [featured, hero] = await Promise.all([getFeaturedGalleries(), getHeroSettings()]);
+
+  const heroStyle = hero.backgroundImage
+    ? { backgroundImage: `url(${hero.backgroundImage})` }
+    : undefined;
 
   return (
     <div className={styles.page}>
 
       {/* HERO */}
-      <section className={styles.hero}>
+      <section className={styles.hero} style={heroStyle}>
         <div className={styles.heroOverlay} />
         <div className={styles.heroContent}>
           <span className={styles.heroPill}>Newcastle &amp; the North East</span>
           <h1 className={styles.heroTitle}>
-            Capturing Moments<br />
-            <span className={styles.heroAccent}>That Last Forever</span>
+            {hero.title}<br />
+            <span className={styles.heroAccent}>{hero.titleAccent}</span>
           </h1>
-          <p className={styles.heroSub}>
-            Professional photography for portraits, events, commercial and community work.
-            Delivering stunning images across Newcastle and the North East.
-          </p>
+          <p className={styles.heroSub}>{hero.subtitle}</p>
           <div className={styles.heroCtas}>
             <Link href="/book" className={styles.heroBtnPrimary}>
               <FiCalendar size={16} /> Book a Session

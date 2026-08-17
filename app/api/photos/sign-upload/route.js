@@ -11,9 +11,12 @@ export async function POST(req) {
       return NextResponse.json({ error: "Cloudinary environment variables not configured" }, { status: 500 });
     }
 
-    const { galleryId } = await req.json();
+    const body = await req.json();
+    const galleryId = body.galleryId || null;
     const timestamp = Math.round(Date.now() / 1000);
-    const folder = `coseng-photography/${galleryId}`;
+    const folder = galleryId
+      ? `coseng-photography/${galleryId}`
+      : `coseng-photography/homepage`;
 
     const paramsToSign = `folder=${folder}&timestamp=${timestamp}`;
     const signature = crypto
