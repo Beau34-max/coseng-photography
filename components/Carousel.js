@@ -29,9 +29,11 @@ export default function Carousel() {
       .then((r) => r.json())
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          setSlides(
-            data.map((p) => ({ src: addWatermark(p.url), label: p.caption || "Our Work" }))
-          );
+          let mapped = data.map((p) => ({ src: addWatermark(p.url), label: p.caption || "Our Work" }));
+          // Always fill at least 3 panels so no black slot shows
+          if (mapped.length === 1) mapped = [mapped[0], mapped[0], mapped[0]];
+          else if (mapped.length === 2) mapped = [...mapped, mapped[0]];
+          setSlides(mapped);
         }
       })
       .catch(() => {});
@@ -114,7 +116,7 @@ export default function Carousel() {
           }}
         >
           {EXT.map((slide, i) => (
-            <div key={i} className={styles.slide}>
+            <div key={i} className={styles.slide} style={{ '--bg-img': `url(${slide.src})` }}>
               <img src={slide.src} alt={slide.label} />
               <div className={styles.caption}>
                 <span>{slide.label}</span>
