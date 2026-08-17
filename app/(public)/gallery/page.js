@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { connectToDb } from "@/lib/mongodb";
-import { FiImage } from "react-icons/fi";
+import PhotoGrid from "./PhotoGrid";
 import styles from "./gallery.module.css";
 
 export const metadata = { title: "Gallery" };
@@ -8,21 +8,38 @@ export const revalidate = 60;
 
 const CATEGORIES = ["All", "Birthday", "Event", "Portrait", "Commercial", "Charity", "Wedding", "Landscape", "Other"];
 
-async function getGalleries() {
+async function getAllPhotos() {
   try {
     const db = await connectToDb();
-    return db.collection("galleries")
+    const galleries = await db.collection("galleries")
       .find({ isPublic: true })
-      .sort({ createdAt: -1 })
-      .toArray()
-      .then((gs) => gs.map((g) => ({ ...g, _id: g._id.toString() })));
+      .project({ _id: 1, category: 1 })
+      .toArray();
+
+    if (!galleries.length) return [];
+
+    const catMap = {};
+    galleries.forEach((g) => { catMap[g._id.toString()] = g.category || "Other"; });
+    const galleryIds = galleries.map((g) => g._id.toString());
+
+    const photos = await db.collection("photos")
+      .find({ galleryId: { $in: galleryIds } })
+      .sort({ uploadedAt: -1 })
+      .toArray();
+
+    return photos.map((p) => ({
+      _id: p._id.toString(),
+      url: p.url,
+      caption: p.caption || "",
+      category: catMap[p.galleryId] || "Other",
+    }));
   } catch { return []; }
 }
 
 export default async function GalleryPage({ searchParams }) {
-  const galleries = await getGalleries();
+  const photos = await getAllPhotos();
   const cat = searchParams?.cat || "All";
-  const filtered = cat === "All" ? galleries : galleries.filter((g) => g.category === cat);
+  const filtered = cat === "All" ? photos : photos.filter((p) => p.category === cat);
 
   return (
     <div className={styles.page}>
@@ -46,28 +63,7 @@ export default async function GalleryPage({ searchParams }) {
           ))}
         </div>
 
-        {filtered.length === 0 ? (
-          <div className={styles.empty}>
-            <FiImage size={48} />
-            <p>No galleries in this category yet.</p>
-          </div>
-        ) : (
-          <div className={styles.grid}>
-            {filtered.map((g) => (
-              <Link href={`/gallery/${g.slug}`} key={g._id} className={styles.card}>
-                <div className={styles.cardImg} style={{ background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)" }}>
-                  {g.coverUrl && <img src={g.coverUrl} alt={g.title} loading="lazy" />}
-                  <span className={styles.count}><FiImage size={12} /> {g.photoCount || 0}</span>
-                </div>
-                <div className={styles.cardBody}>
-                  <h3>{g.title}</h3>
-                  <span className={styles.category}>{g.category}</span>
-                  {g.description && <p>{g.description}</p>}
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
+        <PhotoGrid photos={filtered} />
       </div>
     </div>
   );

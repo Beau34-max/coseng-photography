@@ -36,12 +36,27 @@ async function getFeaturedGalleries() {
   } catch { return []; }
 }
 
-const services = [
-  { Icon: FiStar, title: "Portrait Sessions", desc: "Individual and family portraits in studio or on location across the North East.", from: "£150" },
-  { Icon: FiCalendar, title: "Events & Occasions", desc: "Birthdays, graduations, community events — we capture every moment.", from: "£200" },
-  { Icon: FiImage, title: "Commercial", desc: "Professional shots for businesses, brands and organisations.", from: "£300" },
-  { Icon: FiUser, title: "Charity & Community", desc: "Supporting charities and community groups across Newcastle. 4hrs — extra £100/hr thereafter.", from: "£400" },
+const SERVICE_DEFS = [
+  { category: "Portrait",   title: "Portrait Sessions",    desc: "Individual and family portraits in studio or on location across the North East.", from: "£150", gradient: "linear-gradient(135deg,#1a1a2e 0%,#2d3561 100%)" },
+  { category: "Event",      title: "Events & Occasions",   desc: "Birthdays, graduations, community events — we capture every moment.", from: "£200", gradient: "linear-gradient(135deg,#0f2027 0%,#203a43 50%,#2c5364 100%)" },
+  { category: "Commercial", title: "Commercial",           desc: "Professional shots for businesses, brands and organisations.", from: "£300", gradient: "linear-gradient(135deg,#1c1c1c 0%,#3a3a3a 100%)" },
+  { category: "Charity",    title: "Charity & Community",  desc: "Supporting charities and community groups across Newcastle. 4hrs — extra £100/hr thereafter.", from: "£400", gradient: "linear-gradient(135deg,#1a2f1a 0%,#2d5a27 100%)" },
 ];
+
+async function getServicePhotos() {
+  try {
+    const db = await connectToDb();
+    const photoMap = {};
+    await Promise.all(SERVICE_DEFS.map(async ({ category }) => {
+      const gallery = await db.collection("galleries").findOne(
+        { category, coverImage: { $exists: true, $ne: "" } },
+        { sort: { createdAt: -1 } }
+      );
+      if (gallery?.coverImage) photoMap[category] = gallery.coverImage;
+    }));
+    return photoMap;
+  } catch { return {}; }
+}
 
 const stats = [
   { value: "4,300+", label: "Photos Delivered" },
@@ -51,7 +66,7 @@ const stats = [
 ];
 
 export default async function HomePage() {
-  const [featured, hero] = await Promise.all([getFeaturedGalleries(), getHeroSettings()]);
+  const [featured, hero, servicePhotos] = await Promise.all([getFeaturedGalleries(), getHeroSettings(), getServicePhotos()]);
 
   const heroStyle = hero.backgroundImage
     ? { backgroundImage: `url(${hero.backgroundImage})` }
@@ -106,15 +121,23 @@ export default async function HomePage() {
             <p>From intimate portraits to large events — we cover it all.</p>
           </div>
           <div className={styles.servicesGrid}>
-            {services.map(({ Icon, title, desc, from }) => (
-              <div key={title} className={styles.serviceCard}>
-                <div className={styles.serviceIcon}><Icon size={24} /></div>
-                <h3>{title}</h3>
-                <p>{desc}</p>
-                <span className={styles.serviceFrom}>From {from}</span>
-                <Link href="/book" className={styles.serviceBtn}>Book Now →</Link>
-              </div>
-            ))}
+            {SERVICE_DEFS.map(({ category, title, desc, from, gradient }) => {
+              const photo = servicePhotos[category];
+              return (
+                <div key={title} className={styles.serviceCard}>
+                  <div className={styles.servicePhoto} style={{ background: gradient }}>
+                    {photo && <img src={photo} alt={title} loading="lazy" />}
+                    <div className={styles.servicePhotoOverlay} />
+                  </div>
+                  <div className={styles.serviceBody}>
+                    <h3>{title}</h3>
+                    <p>{desc}</p>
+                    <span className={styles.serviceFrom}>From {from}</span>
+                    <Link href="/book" className={styles.serviceBtn}>Book Now →</Link>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

@@ -41,11 +41,15 @@
 /* ── SERVICES ── */
 .services { padding: 5.5rem 1.5rem; background: #fafafa; }
 .servicesGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
-.serviceCard { background: #fff; border: 1px solid #f0e4e6; border-radius: 16px; padding: 2rem 1.5rem; display: flex; flex-direction: column; gap: 0.6rem; transition: box-shadow 0.2s, transform 0.2s; }
-.serviceCard:hover { box-shadow: 0 12px 32px rgba(106,153,78,0.08); transform: translateY(-2px); }
-.serviceIcon { width: 48px; height: 48px; border-radius: 12px; background: #edf7e6; color: #6a994e; display: flex; align-items: center; justify-content: center; margin-bottom: 0.35rem; }
-.serviceCard h3 { font-size: 1.05rem; font-weight: 700; color: #1a1a1a; }
-.serviceCard p { font-size: 0.875rem; color: #555; line-height: 1.65; flex: 1; }
+.serviceCard { background: #fff; border: 1px solid #f0e4e6; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; transition: box-shadow 0.2s, transform 0.2s; }
+.serviceCard:hover { box-shadow: 0 12px 32px rgba(106,153,78,0.12); transform: translateY(-3px); }
+.servicePhoto { position: relative; height: 200px; overflow: hidden; flex-shrink: 0; }
+.servicePhoto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; transition: transform 0.4s ease; }
+.serviceCard:hover .servicePhoto img { transform: scale(1.04); }
+.servicePhotoOverlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.28) 100%); }
+.serviceBody { padding: 1.5rem; display: flex; flex-direction: column; gap: 0.6rem; flex: 1; }
+.serviceBody h3 { font-size: 1.05rem; font-weight: 700; color: #1a1a1a; }
+.serviceBody p { font-size: 0.875rem; color: #555; line-height: 1.65; flex: 1; }
 .serviceFrom { font-size: 0.82rem; font-weight: 700; color: #6a994e; }
 .serviceBtn { margin-top: 0.25rem; font-size: 0.875rem; font-weight: 700; color: #6a994e; transition: color 0.2s; }
 .serviceBtn:hover { color: #4a7c3f; }
