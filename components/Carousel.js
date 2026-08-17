@@ -109,14 +109,14 @@ export default function Carousel() {
         <div
           className={styles.track}
           style={{
-            transform: `translateX(calc(${-idx} * 100vw))`,
+            transform: `translateX(calc(${-idx} * (100vw / 3)))`,
             transition: animated
               ? "transform 0.65s cubic-bezier(0.4, 0, 0.2, 1)"
               : "none",
           }}
         >
           {EXT.map((slide, i) => (
-            <div key={i} className={styles.slide} style={{ '--bg-img': `url(${slide.src})` }}>
+            <div key={i} className={styles.slide}>
               <img src={slide.src} alt={slide.label} />
               <div className={styles.caption}>
                 <span>{slide.label}</span>
