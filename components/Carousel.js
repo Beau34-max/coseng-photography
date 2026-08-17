@@ -17,12 +17,13 @@ const STATIC_SLIDES = [
 
 export default function Carousel() {
   const [slides, setSlides]     = useState(STATIC_SLIDES);
-  const [idx, setIdx]           = useState(0);
+  const [offset, setOffset]     = useState(0);
   const [animated, setAnimated] = useState(true);
   const [paused, setPaused]     = useState(false);
   const [barKey, setBarKey]     = useState(0);
-  const busyRef                 = useRef(false);
-  const nextRef                 = useRef(null);
+  const busyRef  = useRef(false);
+  const trackRef = useRef(null);
+  const nextRef  = useRef(null);
 
   useEffect(() => {
     fetch("/api/photos/homepage")
@@ -33,32 +34,46 @@ export default function Carousel() {
             src: addWatermark(p.url),
             label: p.caption || "Our Work",
           })));
+          setOffset(0);
         }
       })
       .catch(() => {});
   }, []);
 
-  const N   = slides.length;
-  // Duplicate for seamless loop: [...slides, ...slides]
-  const EXT = [...slides, ...slides];
+  // Width of the first (non-duplicated) half of the track
+  function halfWidth() {
+    return trackRef.current
+      ? Math.round(trackRef.current.scrollWidth / 2)
+      : window.innerWidth;
+  }
+
+  function step() {
+    return window.innerWidth;
+  }
 
   function goNext() {
     if (busyRef.current) return;
     busyRef.current = true;
     setAnimated(true);
     setBarKey((k) => k + 1);
-    setIdx((i) => {
-      const next = i + 1;
-      if (next >= N) {
-        // Silent reset after transition
+
+    setOffset((o) => {
+      const next = o + step();
+      const half = halfWidth();
+
+      if (next >= half) {
+        // Slide to the duplicate, then silently reset
         setTimeout(() => {
           setAnimated(false);
-          setIdx(0);
-          setTimeout(() => { setAnimated(true); busyRef.current = false; }, 40);
-        }, 650);
-        return N; // momentarily land on duplicate
+          setOffset(next - half);
+          setTimeout(() => {
+            setAnimated(true);
+            busyRef.current = false;
+          }, 40);
+        }, 680);
+      } else {
+        setTimeout(() => { busyRef.current = false; }, 680);
       }
-      setTimeout(() => { busyRef.current = false; }, 650);
       return next;
     });
   }
@@ -66,23 +81,26 @@ export default function Carousel() {
   function goPrev() {
     if (busyRef.current) return;
     busyRef.current = true;
+    setAnimated(true);
     setBarKey((k) => k + 1);
-    setIdx((i) => {
-      if (i === 0) {
+
+    setOffset((o) => {
+      if (o <= 0) {
+        // Jump to end of first half, then slide back
+        const half = halfWidth();
         setAnimated(false);
         setTimeout(() => {
-          setIdx(N);
+          const dest = half - step();
+          setOffset(dest >= 0 ? dest : 0);
           setTimeout(() => {
             setAnimated(true);
-            setIdx(N - 1);
-            setTimeout(() => { busyRef.current = false; }, 650);
+            busyRef.current = false;
           }, 40);
         }, 0);
         return 0;
       }
-      setAnimated(true);
-      setTimeout(() => { busyRef.current = false; }, 650);
-      return i - 1;
+      setTimeout(() => { busyRef.current = false; }, 680);
+      return Math.max(0, o - step());
     });
   }
 
@@ -94,7 +112,8 @@ export default function Carousel() {
     return () => clearInterval(t);
   }, [paused]);
 
-  const displayIdx = idx % N; // for dots
+  // Duplicate the strip for seamless loop
+  const EXT = [...slides, ...slides];
 
   return (
     <section
@@ -103,10 +122,13 @@ export default function Carousel() {
       onMouseLeave={() => setPaused(false)}
     >
       <div
+        ref={trackRef}
         className={styles.track}
         style={{
-          transform: `translateX(calc(${-idx} * 100vw))`,
-          transition: animated ? "transform 0.65s cubic-bezier(0.4,0,0.2,1)" : "none",
+          transform: `translateX(${-offset}px)`,
+          transition: animated
+            ? "transform 0.65s cubic-bezier(0.4, 0, 0.2, 1)"
+            : "none",
         }}
       >
         {EXT.map((slide, i) => (
@@ -117,36 +139,20 @@ export default function Carousel() {
         ))}
       </div>
 
-      {/* Dot indicators */}
-      {N > 1 && (
-        <div className={styles.dots}>
-          {slides.map((_, i) => (
-            <button
-              key={i}
-              className={`${styles.dot} ${i === displayIdx ? styles.dotActive : ""}`}
-              onClick={() => {
-                if (!busyRef.current) {
-                  busyRef.current = true;
-                  setAnimated(true);
-                  setIdx(i);
-                  setBarKey((k) => k + 1);
-                  setTimeout(() => { busyRef.current = false; }, 650);
-                }
-              }}
-              aria-label={`Go to slide ${i + 1}`}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Progress bar */}
       {!paused && <div key={barKey} className={styles.progressBar} />}
 
-      {/* Arrows */}
-      <button className={`${styles.arrow} ${styles.arrowLeft}`} onClick={goPrev} aria-label="Previous">
+      <button
+        className={`${styles.arrow} ${styles.arrowLeft}`}
+        onClick={goPrev}
+        aria-label="Previous"
+      >
         <FiChevronLeft size={28} />
       </button>
-      <button className={`${styles.arrow} ${styles.arrowRight}`} onClick={goNext} aria-label="Next">
+      <button
+        className={`${styles.arrow} ${styles.arrowRight}`}
+        onClick={goNext}
+        aria-label="Next"
+      >
         <FiChevronRight size={28} />
       </button>
     </section>

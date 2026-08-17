@@ -1,9 +1,9 @@
-/* Full-width slide-left carousel — photos fill edge to edge, no black bars */
+/* Continuous natural-width strip — portraits cluster 3-up, landscapes fill alone */
 .carousel {
   position: relative;
   width: 100%;
-  height: 80vh;
-  min-height: 500px;
+  height: 78vh;
+  min-height: 480px;
   overflow: hidden;
   background: #0d0d0d;
 }
@@ -12,29 +12,41 @@
   display: flex;
   height: 100%;
   will-change: transform;
+  /* no wrapping — one long horizontal strip */
 }
 
 .slide {
   position: relative;
   flex-shrink: 0;
-  width: 100vw;
   height: 100%;
+  /* Width is NOT set — the photo's natural aspect ratio determines it */
 }
 
-/* Photo fills the frame fully — cover so no black bars ever */
+/* The magic: height fills the container, width is automatic from the image ratio.
+   Portrait photos (~3:4) → narrow panels (~60vh wide → ~3 visible at once).
+   Landscape photos (~3:2) → wide panels (~120vh wide → fills the view alone).
+   No object-fit, no cropping, no black bars — ever. */
 .photo {
-  width: 100%;
   height: 100%;
+  width: auto;
   display: block;
-  object-fit: cover;
-  object-position: top center; /* keeps subjects at top visible, trims bottom excess */
+  /* Thin gap between photos using a right border on each slide */
+}
+
+.slide::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 3px;
+  height: 100%;
+  background: #0d0d0d;
 }
 
 /* Caption */
 .caption {
   position: absolute;
-  bottom: 3rem;
-  left: 1.5rem;
+  bottom: 1rem;
+  left: 0.75rem;
   z-index: 5;
 }
 
@@ -42,9 +54,9 @@
   display: inline-block;
   background: rgba(0, 0, 0, 0.48);
   color: #fff;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  padding: 0.32rem 1rem;
+  padding: 0.28rem 0.85rem;
   border-radius: 999px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -54,8 +66,7 @@
 /* Progress bar */
 .progressBar {
   position: absolute;
-  bottom: 0;
-  left: 0;
+  bottom: 0; left: 0;
   height: 3px;
   background: #a8d48a;
   z-index: 10;
@@ -75,12 +86,9 @@
   background: rgba(255, 255, 255, 0.12);
   border: 1px solid rgba(255, 255, 255, 0.22);
   color: #fff;
-  width: 52px;
-  height: 52px;
+  width: 52px; height: 52px;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   cursor: pointer;
   transition: background 0.2s;
   z-index: 10;
@@ -91,39 +99,12 @@
 .arrowLeft   { left: 1.25rem; }
 .arrowRight  { right: 1.25rem; }
 
-/* Dot indicators */
-.dots {
-  position: absolute;
-  bottom: 0.75rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 0.45rem;
-  z-index: 10;
-}
-
-.dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.35);
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  transition: background 0.2s, transform 0.2s;
-}
-
-.dotActive {
-  background: #a8d48a;
-  transform: scale(1.4);
-}
-
 @media (max-width: 768px) {
-  .carousel { height: 65vh; min-height: 380px; }
+  .carousel { height: 60vh; min-height: 360px; }
 }
 
 @media (max-width: 480px) {
-  .carousel { height: 55vh; min-height: 320px; }
+  .carousel { height: 52vh; min-height: 300px; }
   .arrow { width: 40px; height: 40px; }
   .arrowLeft  { left: 0.5rem; }
   .arrowRight { right: 0.5rem; }
