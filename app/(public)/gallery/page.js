@@ -19,7 +19,11 @@ async function getAllPhotos() {
     if (!galleries.length) return [];
 
     const catMap = {};
-    galleries.forEach((g) => { catMap[g._id.toString()] = g.category || "Other"; });
+    galleries.forEach((g) => {
+      const raw = g.category || "other";
+      // Normalise to title-case so lowercase DB values match the filter buttons
+      catMap[g._id.toString()] = raw.charAt(0).toUpperCase() + raw.slice(1);
+    });
     const galleryIds = galleries.map((g) => g._id.toString());
 
     const photos = await db.collection("photos")
