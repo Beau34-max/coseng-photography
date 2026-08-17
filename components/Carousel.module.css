@@ -2,10 +2,10 @@
 .carousel {
   position: relative;
   width: 100%;
-  height: 78vh;
-  min-height: 480px;
+  height: 92vh;
+  min-height: 560px;
   overflow: hidden;
-  background: #0d0d0d;
+  background: #fff;
 }
 
 .track {
@@ -37,9 +37,9 @@
   content: '';
   position: absolute;
   top: 0; right: 0;
-  width: 3px;
+  width: 4px;
   height: 100%;
-  background: #0d0d0d;
+  background: #fff;
 }
 
 /* Caption */
@@ -100,11 +100,11 @@
 .arrowRight  { right: 1.25rem; }
 
 @media (max-width: 768px) {
-  .carousel { height: 60vh; min-height: 360px; }
+  .carousel { height: 75vh; min-height: 420px; }
 }
 
 @media (max-width: 480px) {
-  .carousel { height: 52vh; min-height: 300px; }
+  .carousel { height: 65vh; min-height: 360px; }
   .arrow { width: 40px; height: 40px; }
   .arrowLeft  { left: 0.5rem; }
   .arrowRight { right: 0.5rem; }
