@@ -56,8 +56,9 @@ const stats = [
 export default async function HomePage() {
   const [hero, servicePhotos] = await Promise.all([getHeroSettings(), getServicePhotos()]);
 
+  const posY = hero.backgroundPositionY ?? 50;
   const heroStyle = hero.backgroundImage
-    ? { backgroundImage: `url(${hero.backgroundImage})` }
+    ? { backgroundImage: `url(${hero.backgroundImage})`, backgroundPosition: `center ${posY}%` }
     : undefined;
 
   return (

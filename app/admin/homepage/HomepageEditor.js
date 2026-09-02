@@ -1,23 +1,36 @@
 "use client";
 import { useState, useRef } from "react";
 import {
-  FiCheck, FiUploadCloud, FiTrash2, FiImage, FiType, FiLayout, FiGripVertical,
+  FiCheck, FiUploadCloud, FiTrash2, FiImage, FiType, FiLayout, FiDroplet,
 } from "react-icons/fi";
 import styles from "./homepage-editor.module.css";
 
 const TABS = [
-  { id: "hero",     label: "Hero Section",  Icon: FiLayout },
-  { id: "carousel", label: "Carousel",      Icon: FiImage },
+  { id: "hero",      label: "Hero Section", Icon: FiLayout },
+  { id: "carousel",  label: "Carousel",     Icon: FiImage },
+  { id: "watermark", label: "Watermark",    Icon: FiDroplet },
 ];
 
+const WM_FONTS = [
+  { value: "Dancing_Script", label: "Dancing Script — flowing cursive" },
+  { value: "Great_Vibes",    label: "Great Vibes — elegant script" },
+  { value: "Pacifico",       label: "Pacifico — bold rounded" },
+  { value: "Sacramento",     label: "Sacramento — fine thin script" },
+  { value: "Parisienne",     label: "Parisienne — ornate script" },
+  { value: "Arial",          label: "Arial — clean modern" },
+];
+
+const WM_DEFAULTS = { text: "COSENG Photography", font: "Dancing_Script", size: 80, opacity: 40, angle: -20 };
+
 export default function HomepageEditor({ initial }) {
-  const [tab, setTab]         = useState("hero");
-  const [hero, setHero]       = useState(initial.hero);
+  const [tab, setTab]           = useState("hero");
+  const [hero, setHero]         = useState({ backgroundPositionY: 50, ...initial.hero });
   const [carousel, setCarousel] = useState(initial.carousel || []);
-  const [saving, setSaving]   = useState(false);
-  const [flash, setFlash]     = useState("");
+  const [wm, setWm]             = useState(initial.watermark || WM_DEFAULTS);
+  const [saving, setSaving]     = useState(false);
+  const [flash, setFlash]       = useState("");
   const [uploading, setUploading] = useState(false);
-  const heroImgRef  = useRef();
+  const heroImgRef = useRef();
 
   function showFlash(msg) {
     setFlash(msg);
@@ -27,12 +40,19 @@ export default function HomepageEditor({ initial }) {
   async function save() {
     setSaving(true);
     try {
-      const res = await fetch("/api/admin/homepage", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ hero, carousel }),
-      });
-      if (res.ok) showFlash("Homepage saved — changes will appear live shortly");
+      const [r1, r2] = await Promise.all([
+        fetch("/api/admin/homepage", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ hero, carousel }),
+        }),
+        fetch("/api/admin/watermark", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(wm),
+        }),
+      ]);
+      if (r1.ok && r2.ok) showFlash("Homepage saved — changes will appear live shortly");
       else showFlash("Save failed");
     } catch { showFlash("Save failed"); }
     setSaving(false);
@@ -185,12 +205,27 @@ export default function HomepageEditor({ initial }) {
                   backgroundImage: hero.backgroundImage
                     ? `url(${hero.backgroundImage})`
                     : "linear-gradient(135deg, #0a0a0a 0%, #1a2a1a 100%)",
+                  backgroundPosition: `center ${hero.backgroundPositionY ?? 50}%`,
                 }}>
                   <div className={styles.heroBgOverlay}>
                     <span className={styles.heroBgText}>
                       {hero.title}<br />
                       <em style={{ color: "#a8d48a" }}>{hero.titleAccent}</em>
                     </span>
+                  </div>
+                </div>
+
+                <div className={styles.field} style={{ marginTop: "0.25rem" }}>
+                  <label>Focal point — drag to shift image up or down</label>
+                  <div className={styles.sliderRow}>
+                    <span className={styles.sliderLabel}>Top</span>
+                    <input
+                      type="range" min={0} max={100} step={1}
+                      value={hero.backgroundPositionY ?? 50}
+                      onChange={(e) => setHero((h) => ({ ...h, backgroundPositionY: Number(e.target.value) }))}
+                      className={styles.slider}
+                    />
+                    <span className={styles.sliderLabel}>Bottom</span>
                   </div>
                 </div>
 
@@ -218,6 +253,103 @@ export default function HomepageEditor({ initial }) {
                     <FiTrash2 size={13} /> Remove — use default dark background
                   </button>
                 )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── WATERMARK TAB ── */}
+      {tab === "watermark" && (
+        <div className={styles.tabContent}>
+          <div className={styles.grid}>
+            <div>
+              <div className={styles.section}>
+                <h3><FiDroplet size={14} style={{ marginRight: 6 }} />Signature Text & Font</h3>
+                <p className={styles.hint}>This text appears diagonally across your public gallery photos to deter copying.</p>
+
+                <div className={styles.field}>
+                  <label>Watermark Text</label>
+                  <input
+                    value={wm.text}
+                    onChange={(e) => setWm((w) => ({ ...w, text: e.target.value }))}
+                    placeholder="COSENG Photography"
+                  />
+                </div>
+
+                <div className={styles.field}>
+                  <label>Font Style</label>
+                  <select
+                    className={styles.select}
+                    value={wm.font}
+                    onChange={(e) => setWm((w) => ({ ...w, font: e.target.value }))}
+                  >
+                    {WM_FONTS.map(({ value, label }) => (
+                      <option key={value} value={value}>{label}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className={styles.field}>
+                  <label>Size — <strong>{wm.size}pt</strong></label>
+                  <div className={styles.sliderRow}>
+                    <span className={styles.sliderLabel}>Small</span>
+                    <input type="range" min={40} max={140} step={4} value={wm.size}
+                      onChange={(e) => setWm((w) => ({ ...w, size: Number(e.target.value) }))}
+                      className={styles.slider}
+                    />
+                    <span className={styles.sliderLabel}>Large</span>
+                  </div>
+                </div>
+
+                <div className={styles.field}>
+                  <label>Opacity — <strong>{wm.opacity}%</strong></label>
+                  <div className={styles.sliderRow}>
+                    <span className={styles.sliderLabel}>Subtle</span>
+                    <input type="range" min={10} max={80} step={5} value={wm.opacity}
+                      onChange={(e) => setWm((w) => ({ ...w, opacity: Number(e.target.value) }))}
+                      className={styles.slider}
+                    />
+                    <span className={styles.sliderLabel}>Bold</span>
+                  </div>
+                </div>
+
+                <div className={styles.field}>
+                  <label>Angle — <strong>{wm.angle}°</strong></label>
+                  <div className={styles.sliderRow}>
+                    <span className={styles.sliderLabel}>−45°</span>
+                    <input type="range" min={-45} max={45} step={5} value={wm.angle}
+                      onChange={(e) => setWm((w) => ({ ...w, angle: Number(e.target.value) }))}
+                      className={styles.slider}
+                    />
+                    <span className={styles.sliderLabel}>+45°</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div className={styles.section}>
+                <h3>Preview</h3>
+                <p className={styles.hint}>Approximate preview — the live watermark is rendered by Cloudinary on the actual image.</p>
+                <div className={styles.wmPreview}>
+                  <div className={styles.wmPreviewImg}>
+                    <div
+                      className={styles.wmText}
+                      style={{
+                        fontFamily: wm.font.replace(/_/g, " "),
+                        fontSize: `${Math.round(wm.size * 0.22)}px`,
+                        opacity: wm.opacity / 100,
+                        transform: `rotate(${wm.angle}deg)`,
+                      }}
+                    >
+                      {wm.text}
+                    </div>
+                  </div>
+                </div>
+                <p className={styles.hint} style={{ marginTop: "0.75rem" }}>
+                  <strong>Fonts used:</strong> Dancing Script, Great Vibes, Pacifico, Sacramento, Parisienne — all rendered by Cloudinary when photos are displayed.
+                </p>
               </div>
             </div>
           </div>

@@ -9,6 +9,7 @@ const DEFAULTS = {
     subtitle:
       "Professional photography for portraits, events, commercial and community work. Delivering stunning images across Newcastle and the North East.",
     backgroundImage: null,
+    backgroundPositionY: 50,
   },
   carousel: [],
 };

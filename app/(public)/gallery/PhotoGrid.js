@@ -3,6 +3,8 @@ import { useState } from "react";
 import { FiX, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import styles from "./gallery.module.css";
 
+const noSave = (e) => e.preventDefault();
+
 export default function PhotoGrid({ photos }) {
   const [lightbox, setLightbox] = useState(null); // index into photos
 
@@ -35,9 +37,11 @@ export default function PhotoGrid({ photos }) {
             key={p._id}
             className={styles.thumb}
             onClick={() => open(i)}
+            onContextMenu={noSave}
             aria-label={p.caption || "View photo"}
           >
-            <img src={p.url} alt={p.caption || ""} loading="lazy" />
+            <img src={p.url} alt={p.caption || ""} loading="lazy" draggable={false} onContextMenu={noSave} />
+            <div className={styles.imgShield} onContextMenu={noSave} />
           </button>
         ))}
       </div>
@@ -57,8 +61,8 @@ export default function PhotoGrid({ photos }) {
           <button className={`${styles.lbArrow} ${styles.lbPrev}`} onClick={(e) => { e.stopPropagation(); prev(); }} aria-label="Previous">
             <FiChevronLeft size={28} />
           </button>
-          <div className={styles.lbImg} onClick={(e) => e.stopPropagation()}>
-            <img src={current.url} alt={current.caption || ""} />
+          <div className={styles.lbImg} onClick={(e) => e.stopPropagation()} onContextMenu={noSave}>
+            <img src={current.url} alt={current.caption || ""} draggable={false} onContextMenu={noSave} />
             {current.caption && <p className={styles.lbCaption}>{current.caption}</p>}
           </div>
           <button className={`${styles.lbArrow} ${styles.lbNext}`} onClick={(e) => { e.stopPropagation(); next(); }} aria-label="Next">

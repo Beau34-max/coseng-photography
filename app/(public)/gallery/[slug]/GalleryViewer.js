@@ -6,11 +6,11 @@ import styles from "./gallery-viewer.module.css";
 
 const noSave = (e) => e.preventDefault();
 
-export default function GalleryViewer({ gallery, photos }) {
+export default function GalleryViewer({ gallery, photos, wmSettings = {} }) {
   const [lightbox, setLightbox] = useState(null);
 
   // Always watermark public gallery photos — strong diagonal centre mark
-  const wm = (url) => addPublicWatermark(url);
+  const wm = (url) => addPublicWatermark(url, wmSettings);
 
   function prev() { setLightbox((i) => (i > 0 ? i - 1 : photos.length - 1)); }
   function next() { setLightbox((i) => (i < photos.length - 1 ? i + 1 : 0)); }

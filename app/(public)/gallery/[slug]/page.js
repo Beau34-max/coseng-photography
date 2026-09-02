@@ -4,6 +4,8 @@ import GalleryViewer from "./GalleryViewer";
 
 export const revalidate = 60;
 
+const WM_DEFAULTS = { text: "COSENG Photography", font: "Dancing_Script", size: 80, opacity: 40, angle: -20 };
+
 async function getGallery(slug) {
   try {
     const db = await connectToDb();
@@ -20,6 +22,14 @@ async function getGallery(slug) {
   } catch { return null; }
 }
 
+async function getWatermarkSettings() {
+  try {
+    const db = await connectToDb();
+    const doc = await db.collection("settings").findOne({ key: "watermark" });
+    return { ...WM_DEFAULTS, ...(doc || {}) };
+  } catch { return WM_DEFAULTS; }
+}
+
 export async function generateMetadata({ params }) {
   const data = await getGallery(params.slug);
   if (!data) return {};
@@ -27,7 +37,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function GalleryPage({ params }) {
-  const data = await getGallery(params.slug);
+  const [data, wmSettings] = await Promise.all([getGallery(params.slug), getWatermarkSettings()]);
   if (!data) notFound();
-  return <GalleryViewer gallery={data.gallery} photos={data.photos} />;
+  return <GalleryViewer gallery={data.gallery} photos={data.photos} wmSettings={wmSettings} />;
 }

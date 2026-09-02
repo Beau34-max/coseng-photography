@@ -23,14 +23,24 @@
   overflow: hidden;
   padding: 0;
   width: 100%;
+  position: relative;
 }
 .thumb img {
   width: 100%;
   height: auto;
   display: block;
   transition: opacity 0.2s, transform 0.3s;
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  pointer-events: none;
 }
 .thumb:hover img { opacity: 0.88; transform: scale(1.02); }
+.imgShield {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
 
 .empty { text-align: center; padding: 5rem 2rem; color: #999; }
 .empty p { font-size: 1rem; }
