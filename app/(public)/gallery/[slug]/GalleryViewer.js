@@ -37,6 +37,7 @@ export default function GalleryViewer({ gallery, photos }) {
                   loading="lazy"
                   draggable={false}
                   onContextMenu={noSave}
+                  onError={(e) => { e.currentTarget.style.opacity = "0.15"; }}
                 />
               </button>
             ))}

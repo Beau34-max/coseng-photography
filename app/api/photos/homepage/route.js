@@ -16,6 +16,7 @@ export async function GET() {
           _id: p.id,
           url: p.url,
           caption: p.label || "Our Work",
+          watermarked: true,
         }))
       );
     }
@@ -47,6 +48,7 @@ export async function GET() {
         _id: g._id.toString(),
         url: g.coverImage,
         caption: g.title,
+        watermarked: true,
       }));
 
     return NextResponse.json(combined);
