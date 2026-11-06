@@ -41,7 +41,7 @@ export default function PublicFooter() {
       </div>
       <div className={styles.bottom}>
         <span>© {new Date().getFullYear()} COSENG Photography. All rights reserved.</span>
-        <span>Part of <a href="https://www.coseng.co.uk">Coseng Limited</a></span>
+        <span>Powered by <a href="https://www.elmorilx.com" target="_blank" rel="noopener noreferrer">Elmoril</a></span>
       </div>
     </footer>
   );

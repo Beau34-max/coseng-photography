@@ -1,4 +1,4 @@
-/* Continuous natural-width strip — portraits cluster 3-up, landscapes fill alone */
+﻿/* Continuous natural-width strip — portraits cluster 3-up, landscapes fill alone */
 .carousel {
   position: relative;
   width: 100%;
@@ -68,7 +68,7 @@
   position: absolute;
   bottom: 0; left: 0;
   height: 3px;
-  background: #a8d48a;
+  background: #FFD04A;
   z-index: 10;
   animation: fillBar 4.5s linear forwards;
 }

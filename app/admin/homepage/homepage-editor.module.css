@@ -59,13 +59,13 @@
 /* Fields */
 .field { display: flex; flex-direction: column; gap: 0.35rem; }
 .field label { font-size: 0.78rem; font-weight: 600; color: #374151; }
-.green { color: #C09050; font-weight: 500; }
+.green { color: #FFB800; font-weight: 500; }
 .field input, .field textarea {
   padding: 0.6rem 0.8rem; border: 1px solid #d1d5db; border-radius: 8px;
   font-size: 0.88rem; color: #0d1117; background: #f9fafb;
   box-sizing: border-box; transition: border-color 0.2s; font-family: inherit; width: 100%;
 }
-.field input:focus, .field textarea:focus { outline: none; border-color: #C09050; background: #fff; }
+.field input:focus, .field textarea:focus { outline: none; border-color: #FFB800; background: #fff; }
 
 /* Hero background preview */
 .heroBgPreview {
@@ -104,7 +104,7 @@
   padding: 2rem; border: 2px dashed #d1d5db; border-radius: 12px;
   background: #fafafa; cursor: pointer; color: #6b7280; transition: background 0.2s;
 }
-.uploadZone:hover { background: #f0fdf4; border-color: #C09050; }
+.uploadZone:hover { background: #f0fdf4; border-color: #FFB800; }
 .uploadZone span { font-size: 0.9rem; font-weight: 600; }
 .uploadHint { font-size: 0.75rem; color: #9ca3af; font-weight: 400; }
 
@@ -136,7 +136,7 @@
   font-weight: 600; color: #374151; padding: 0.2rem; font-family: inherit;
   min-width: 0;
 }
-.labelInput:focus { outline: 1px solid #C09050; border-radius: 4px; }
+.labelInput:focus { outline: 1px solid #FFB800; border-radius: 4px; }
 .deleteBtn {
   display: flex; align-items: center; justify-content: center;
   width: 26px; height: 26px; border: none; border-radius: 6px;
@@ -152,7 +152,7 @@
   font-size: 0.72rem; color: #9ca3af; font-weight: 500; white-space: nowrap; flex-shrink: 0;
 }
 .slider {
-  flex: 1; height: 4px; accent-color: #C09050;
+  flex: 1; height: 4px; accent-color: #FFB800;
   -webkit-appearance: none; appearance: none;
   cursor: pointer;
 }
@@ -163,7 +163,7 @@
   font-size: 0.88rem; color: #0d1117; background: #f9fafb;
   font-family: inherit; width: 100%; cursor: pointer;
 }
-.select:focus { outline: none; border-color: #C09050; background: #fff; }
+.select:focus { outline: none; border-color: #FFB800; background: #fff; }
 
 /* Watermark preview */
 .wmPreview {

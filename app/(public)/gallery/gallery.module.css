@@ -8,8 +8,8 @@
 
 .filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 2rem 0; }
 .filterBtn { padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600; color: #555; background: #f5f5f5; border: 1.5px solid #e8e8e8; transition: all 0.2s; }
-.filterBtn:hover { color: #C09050; border-color: #C09050; }
-.filterActive { background: #C09050; color: #fff; border-color: #C09050; }
+.filterBtn:hover { color: #FFB800; border-color: #FFB800; }
+.filterActive { background: #FFB800; color: #fff; border-color: #FFB800; }
 
 /* Masonry photo grid */
 .masonry { columns: 4; column-gap: 6px; }

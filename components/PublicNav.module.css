@@ -1,4 +1,4 @@
-.nav {
+﻿.nav {
   position: sticky; top: 0; z-index: 100;
   background: rgba(10, 10, 10, 0.92);
   backdrop-filter: blur(12px);
@@ -17,8 +17,8 @@
   font-size: 1.05rem; font-weight: 700; color: #fff;
   letter-spacing: 0.02em; flex-shrink: 0;
 }
-.logo em { color: #a8d48a; font-style: normal; }
-.logo svg { color: #a8d48a; }
+.logo em { color: #FFD04A; font-style: normal; }
+.logo svg { color: #FFD04A; }
 
 .links {
   display: flex; align-items: center; gap: 0.25rem;
@@ -37,10 +37,10 @@
   margin-left: 0.5rem;
   padding: 0.45rem 1rem; border-radius: 6px;
   font-size: 0.88rem; font-weight: 700;
-  color: #1a1a1a; background: #a8d48a;
+  color: #1a1a1a; background: #FFD04A;
   transition: background 0.2s;
 }
-.clientBtn:hover { background: #8fbe6e; }
+.clientBtn:hover { background: #FFB800; }
 
 .burger {
   display: none; background: none; border: none;

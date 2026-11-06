@@ -136,7 +136,7 @@ export default async function HomePage() {
         <div className={styles.sectionInner}>
           <div className={styles.clientCtaGrid}>
             <div>
-              <span className={styles.sectionTag} style={{ color: "#E8C990" }}>For Clients</span>
+              <span className={styles.sectionTag} style={{ color: "#FFD04A" }}>For Clients</span>
               <h2>Your Gallery is Ready</h2>
               <p>
                 Already had a session with us? Access your private gallery to view,
