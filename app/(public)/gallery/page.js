@@ -36,10 +36,11 @@ async function getAllPhotos() {
     ]);
 
     // Visitors only receive resized, watermarked copies, never the original file.
-    return photos.map((p) => ({
-      ...publicPhoto(p, wm),
-      category: catMap[p.galleryId] || "Other",
-    }));
+    return photos.flatMap((p) => {
+      try {
+        return [{ ...publicPhoto(p, wm), category: catMap[p.galleryId] || "Other" }];
+      } catch { return []; }
+    });
   } catch { return []; }
 }
 

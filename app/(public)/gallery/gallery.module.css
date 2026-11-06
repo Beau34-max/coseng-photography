@@ -18,22 +18,25 @@
   display: block;
   margin-bottom: 6px;
   border: none;
-  background: none;
+  background: #1E1B18;
   cursor: pointer;
   overflow: hidden;
   padding: 0;
   width: 100%;
   position: relative;
+  min-height: 180px;
 }
 .thumb img {
   width: 100%;
   height: auto;
+  min-height: 180px;
   display: block;
   transition: opacity 0.2s, transform 0.3s;
   user-select: none;
   -webkit-user-drag: none;
   -webkit-touch-callout: none;
   pointer-events: none;
+  object-fit: cover;
 }
 .thumb:hover img { opacity: 0.88; transform: scale(1.02); }
 .imgShield {

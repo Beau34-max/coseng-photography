@@ -40,7 +40,7 @@ export default function PhotoGrid({ photos }) {
             onContextMenu={noSave}
             aria-label={p.caption || "View photo"}
           >
-            <img src={p.thumbUrl} alt={p.caption || ""} loading="lazy" draggable={false} onContextMenu={noSave} />
+            <img src={p.thumbUrl} alt={p.caption || ""} loading="lazy" draggable={false} onContextMenu={noSave} onError={(e) => { e.currentTarget.style.opacity = "0"; }} />
             <div className={styles.imgShield} onContextMenu={noSave} />
           </button>
         ))}
