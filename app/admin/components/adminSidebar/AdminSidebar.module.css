@@ -1,4 +1,4 @@
-.sidebar {
+﻿.sidebar {
   width: 240px; flex-shrink: 0; background: #0d1117;
   min-height: 100vh; display: flex; flex-direction: column;
   position: sticky; top: 0;
@@ -11,8 +11,8 @@
   font-size: 1rem; font-weight: 700; color: #fff;
   border-bottom: 1px solid rgba(255,255,255,0.06);
 }
-.logo em { color: #a8d48a; font-style: normal; }
-.logo svg { color: #a8d48a; }
+.logo em { color: #E8C990; font-style: normal; }
+.logo svg { color: #E8C990; }
 
 .nav { display: flex; flex-direction: column; gap: 2px; padding: 1rem 0.75rem; flex: 1; }
 
@@ -24,7 +24,7 @@
 }
 .navItem:hover { color: #fff; background: rgba(255,255,255,0.06); }
 .navActive { color: #fff; background: rgba(168,212,138,0.12); }
-.navActive svg { color: #a8d48a; }
+.navActive svg { color: #E8C990; }
 
 .bottom { padding: 0.75rem; border-top: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; gap: 4px; }
 .viewSite, .logout {

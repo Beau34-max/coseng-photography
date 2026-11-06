@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { connectToDb } from "@/lib/mongodb";
 import { FiStar, FiCalendar, FiImage, FiUser, FiDownload } from "react-icons/fi";
 import Carousel from "@/components/Carousel";
@@ -136,7 +136,7 @@ export default async function HomePage() {
         <div className={styles.sectionInner}>
           <div className={styles.clientCtaGrid}>
             <div>
-              <span className={styles.sectionTag} style={{ color: "#a8d48a" }}>For Clients</span>
+              <span className={styles.sectionTag} style={{ color: "#E8C990" }}>For Clients</span>
               <h2>Your Gallery is Ready</h2>
               <p>
                 Already had a session with us? Access your private gallery to view,

@@ -43,6 +43,17 @@ export default function GalleryEditor({ gallery: initial, photos: initialPhotos 
   async function handleUpload(e) {
     const files = Array.from(e.target.files);
     if (!files.length) return;
+
+    // Cloudinary free plan enforces 10MB per upload — warn before hitting the API
+    const MAX_MB = 10;
+    const oversized = files.filter((f) => f.size > MAX_MB * 1024 * 1024);
+    if (oversized.length) {
+      const names = oversized.map((f) => `${f.name} (${(f.size / 1024 / 1024).toFixed(1)} MB)`).join(", ");
+      showFlash(`File${oversized.length > 1 ? "s" : ""} too large (max ${MAX_MB} MB): ${names}`);
+      e.target.value = "";
+      return;
+    }
+
     setUploading(true);
     try {
       const sigRes = await fetch("/api/photos/sign-upload", {
@@ -66,9 +77,13 @@ export default function GalleryEditor({ gallery: initial, photos: initialPhotos 
           method: "POST", body: fd,
         });
         if (!up.ok) {
-          const errBody = await up.text();
-          console.error("Cloudinary error:", up.status, errBody);
-          throw new Error(`Upload failed (${up.status})`);
+          let reason = `HTTP ${up.status}`;
+          try {
+            const errJson = await up.json();
+            reason = errJson?.error?.message || reason;
+          } catch { /* ignore parse error */ }
+          console.error("Cloudinary error:", up.status, reason);
+          throw new Error(`${files[i].name}: ${reason}`);
         }
         cloudinaryResults.push(await up.json());
       }
@@ -173,7 +188,7 @@ export default function GalleryEditor({ gallery: initial, photos: initialPhotos 
               <input type="file" accept="image/*" multiple onChange={handleUpload} disabled={uploading} style={{ display: "none" }} />
               <FiUploadCloud size={36} />
               <span>{uploading ? "Uploading — please wait…" : "Click to add photos"}</span>
-              <span className={styles.uploadHint}>JPG, PNG, WebP — any size, multiple at once</span>
+              <span className={styles.uploadHint}>JPG, PNG, WebP — up to 10 MB per file, multiple at once</span>
             </label>
           </div>
 

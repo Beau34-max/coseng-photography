@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useState, useRef } from "react";
 import {
   FiCheck, FiUploadCloud, FiTrash2, FiImage, FiType, FiLayout, FiDroplet,
@@ -210,7 +210,7 @@ export default function HomepageEditor({ initial }) {
                   <div className={styles.heroBgOverlay}>
                     <span className={styles.heroBgText}>
                       {hero.title}<br />
-                      <em style={{ color: "#a8d48a" }}>{hero.titleAccent}</em>
+                      <em style={{ color: "#E8C990" }}>{hero.titleAccent}</em>
                     </span>
                   </div>
                 </div>

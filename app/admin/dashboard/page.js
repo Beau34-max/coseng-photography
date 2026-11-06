@@ -1,4 +1,4 @@
-import { connectToDb } from "@/lib/mongodb";
+﻿import { connectToDb } from "@/lib/mongodb";
 import { getCurrentAdmin } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { FiImage, FiCalendar, FiUsers, FiEye, FiDownload, FiPlus } from "react-icons/fi";
@@ -42,7 +42,7 @@ export default async function DashboardPage() {
   const statCards = [
     { Icon: FiImage, label: "Galleries", value: stats.galleries, href: "/admin/galleries", color: "#6d28d9" },
     { Icon: FiImage, label: "Photos", value: stats.photos.toLocaleString(), color: "#0891b2" },
-    { Icon: FiCalendar, label: "Bookings", value: stats.bookings, href: "/admin/bookings", color: "#6a994e" },
+    { Icon: FiCalendar, label: "Bookings", value: stats.bookings, href: "/admin/bookings", color: "#C09050" },
     { Icon: FiUsers, label: "Clients", value: stats.clients, href: "/admin/clients", color: "#059669" },
     { Icon: FiDownload, label: "Revenue", value: `£${stats.revenue.toLocaleString()}`, color: "#d97706" },
   ];
