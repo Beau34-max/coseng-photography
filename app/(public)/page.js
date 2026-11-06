@@ -25,10 +25,10 @@ async function getHeroSettings() {
 }
 
 const SERVICE_DEFS = [
-  { category: "Portrait",   title: "Portrait Sessions",    desc: "Individual and family portraits in studio or on location across the North East.", from: "£150", gradient: "linear-gradient(135deg,#1a1a2e 0%,#2d3561 100%)" },
-  { category: "Event",      title: "Events & Occasions",   desc: "Birthdays, graduations, community events — we capture every moment.", from: "£200", gradient: "linear-gradient(135deg,#0f2027 0%,#203a43 50%,#2c5364 100%)" },
-  { category: "Commercial", title: "Commercial",           desc: "Professional shots for businesses, brands and organisations.", from: "£300", gradient: "linear-gradient(135deg,#1c1c1c 0%,#3a3a3a 100%)" },
-  { category: "Charity",    title: "Charity & Community",  desc: "Supporting charities and community groups across Newcastle. 4hrs — extra £100/hr thereafter.", from: "£400", gradient: "linear-gradient(135deg,#1a2f1a 0%,#2d5a27 100%)" },
+  { category: "Portrait",   title: "Portrait Sessions",    desc: "Individual and family portraits in studio or on location across the North East.", from: "£150", gradient: "linear-gradient(135deg,#1E1B18 0%,#302617 100%)" },
+  { category: "Event",      title: "Events & Occasions",   desc: "Birthdays, graduations, community events — we capture every moment.", from: "£200", gradient: "linear-gradient(135deg,#141210 0%,#1E1B18 100%)" },
+  { category: "Commercial", title: "Commercial",           desc: "Professional shots for businesses, brands and organisations.", from: "£300", gradient: "linear-gradient(135deg,#1E1B18 0%,#2C2A25 100%)" },
+  { category: "Charity",    title: "Charity & Community",  desc: "Supporting charities and community groups across Newcastle. 4hrs — extra £100/hr thereafter.", from: "£400", gradient: "linear-gradient(135deg,#1D1D15 0%,#1E1B18 100%)" },
 ];
 
 async function getServicePhotos() {
