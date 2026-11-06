@@ -210,7 +210,7 @@ export default function HomepageEditor({ initial }) {
                   <div className={styles.heroBgOverlay}>
                     <span className={styles.heroBgText}>
                       {hero.title}<br />
-                      <em style={{ color: "#FFD04A" }}>{hero.titleAccent}</em>
+                      <em style={{ color: "#F0D890" }}>{hero.titleAccent}</em>
                     </span>
                   </div>
                 </div>

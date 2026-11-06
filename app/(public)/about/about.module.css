@@ -6,7 +6,7 @@
 }
 .heroContent { max-width: 700px; margin: 0 auto; }
 .tag {
-  display: inline-block; padding: 4px 14px; background: rgba(168,212,138,0.15); color: #FFD04A;
+  display: inline-block; padding: 4px 14px; background: rgba(168,212,138,0.15); color: #F0D890;
   border-radius: 20px; font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem;
   border: 1px solid rgba(168,212,138,0.3);
 }
@@ -55,7 +55,7 @@
 .cta p { font-size: 1rem; color: rgba(255,255,255,0.65); margin: 0 0 2rem; }
 .ctaBtns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 .ctaPrimary {
-  padding: 0.85rem 2rem; background: #FFD04A; color: #0d1117;
+  padding: 0.85rem 2rem; background: #F0D890; color: #0d1117;
   border-radius: 10px; text-decoration: none; font-weight: 700;
 }
 .ctaSecondary {

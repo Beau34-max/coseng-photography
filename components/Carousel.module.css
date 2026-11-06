@@ -68,7 +68,7 @@
   position: absolute;
   bottom: 0; left: 0;
   height: 3px;
-  background: #FFD04A;
+  background: #F0D890;
   z-index: 10;
   animation: fillBar 4.5s linear forwards;
 }

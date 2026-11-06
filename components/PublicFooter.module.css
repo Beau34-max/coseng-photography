@@ -13,26 +13,26 @@
   display: flex; align-items: center; gap: 0.5rem;
   font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 0.85rem;
 }
-.logo em { color: #FFD04A; font-style: normal; }
-.logo svg { color: #FFD04A; }
+.logo em { color: #F0D890; font-style: normal; }
+.logo svg { color: #F0D890; }
 
 .brand p { font-size: 0.875rem; line-height: 1.7; max-width: 260px; }
 
 .socials { display: flex; gap: 0.75rem; margin-top: 1.25rem; }
 .socials a { color: rgba(255,255,255,0.5); transition: color 0.2s; }
-.socials a:hover { color: #FFD04A; }
+.socials a:hover { color: #F0D890; }
 
 .col { display: flex; flex-direction: column; gap: 0.6rem; }
 .col h4 { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; margin-bottom: 0.35rem; }
 .col a, .col span { font-size: 0.875rem; color: rgba(255,255,255,0.55); transition: color 0.2s; }
-.col a:hover { color: #FFD04A; }
+.col a:hover { color: #F0D890; }
 
 .bottom {
   max-width: 1200px; margin: 0 auto;
   padding: 1.5rem 0; display: flex; justify-content: space-between; align-items: center;
   font-size: 0.8rem; flex-wrap: wrap; gap: 0.5rem;
 }
-.bottom a { color: #FFD04A; }
+.bottom a { color: #F0D890; }
 
 @media (max-width: 768px) {
   .inner { grid-template-columns: 1fr 1fr; gap: 2rem; }

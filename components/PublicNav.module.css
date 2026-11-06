@@ -17,8 +17,8 @@
   font-size: 1.05rem; font-weight: 700; color: #fff;
   letter-spacing: 0.02em; flex-shrink: 0;
 }
-.logo em { color: #FFD04A; font-style: normal; }
-.logo svg { color: #FFD04A; }
+.logo em { color: #F0D890; font-style: normal; }
+.logo svg { color: #F0D890; }
 
 .links {
   display: flex; align-items: center; gap: 0.25rem;
@@ -37,10 +37,10 @@
   margin-left: 0.5rem;
   padding: 0.45rem 1rem; border-radius: 6px;
   font-size: 0.88rem; font-weight: 700;
-  color: #1a1a1a; background: #FFD04A;
+  color: #1a1a1a; background: #F0D890;
   transition: background 0.2s;
 }
-.clientBtn:hover { background: #FFB800; }
+.clientBtn:hover { background: #E8C878; }
 
 .burger {
   display: none; background: none; border: none;
