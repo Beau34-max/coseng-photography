@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectToDb } from "@/lib/mongodb";
 import { getAdminFromRequest } from "@/lib/auth";
 import { ObjectId } from "mongodb";
+import { adminPhoto, getWatermarkSettings } from "@/lib/delivery";
 
 export async function POST(req) {
   try {
@@ -17,6 +18,7 @@ export async function POST(req) {
     const gallery = await db.collection("galleries").findOne({ _id: new ObjectId(galleryId) });
     if (!gallery) return NextResponse.json({ error: "Gallery not found" }, { status: 404 });
 
+    const settings = await getWatermarkSettings(db);
     const saved = [];
     for (const p of photos) {
       const photo = {
@@ -26,6 +28,7 @@ export async function POST(req) {
         width: p.width,
         height: p.height,
         format: p.format,
+        deliveryType: p.type === "authenticated" ? "authenticated" : "upload",
         caption: "",
         isCover: false,
         order: 0,
@@ -33,7 +36,7 @@ export async function POST(req) {
         uploadedBy: admin.email,
       };
       const ins = await db.collection("photos").insertOne(photo);
-      saved.push({ ...photo, _id: ins.insertedId.toString() });
+      saved.push(adminPhoto({ ...photo, _id: ins.insertedId }, settings));
     }
 
     await db.collection("galleries").updateOne(

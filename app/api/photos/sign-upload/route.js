@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getAdminFromRequest } from "@/lib/auth";
-import crypto from "crypto";
+import cloudinary from "@/lib/cloudinary";
+import { privateUploadsEnabled } from "@/lib/delivery";
 
 export async function POST(req) {
   try {
@@ -13,16 +14,20 @@ export async function POST(req) {
 
     const body = await req.json();
     const galleryId = body.galleryId || null;
+    if (galleryId && !/^[a-f0-9]{24}$/i.test(String(galleryId))) {
+      return NextResponse.json({ error: "Invalid gallery id" }, { status: 400 });
+    }
     const timestamp = Math.round(Date.now() / 1000);
     const folder = galleryId
       ? `coseng-photography/${galleryId}`
       : `coseng-photography/homepage`;
 
-    const paramsToSign = `folder=${folder}&timestamp=${timestamp}`;
-    const signature = crypto
-      .createHash("sha1")
-      .update(paramsToSign + process.env.CLOUDINARY_API_SECRET)
-      .digest("hex");
+    // Gallery photos are uploaded as "authenticated" assets, so their original files cannot
+    // be fetched by URL unless this server signs the link. Homepage showcase uploads stay public.
+    const params = { folder, timestamp };
+    const type = galleryId && privateUploadsEnabled() ? "authenticated" : null;
+    if (type) params.type = type;
+    const signature = cloudinary.utils.api_sign_request(params, process.env.CLOUDINARY_API_SECRET);
 
     return NextResponse.json({
       signature,
@@ -30,6 +35,7 @@ export async function POST(req) {
       cloudName: process.env.CLOUDINARY_CLOUD_NAME,
       apiKey: process.env.CLOUDINARY_API_KEY,
       folder,
+      type,
     });
   } catch (err) {
     console.error(err);

@@ -40,7 +40,7 @@ export default function PhotoGrid({ photos }) {
             onContextMenu={noSave}
             aria-label={p.caption || "View photo"}
           >
-            <img src={p.url} alt={p.caption || ""} loading="lazy" draggable={false} onContextMenu={noSave} />
+            <img src={p.thumbUrl} alt={p.caption || ""} loading="lazy" draggable={false} onContextMenu={noSave} />
             <div className={styles.imgShield} onContextMenu={noSave} />
           </button>
         ))}
@@ -62,7 +62,7 @@ export default function PhotoGrid({ photos }) {
             <FiChevronLeft size={28} />
           </button>
           <div className={styles.lbImg} onClick={(e) => e.stopPropagation()} onContextMenu={noSave}>
-            <img src={current.url} alt={current.caption || ""} draggable={false} onContextMenu={noSave} />
+            <img src={current.previewUrl} alt={current.caption || ""} draggable={false} onContextMenu={noSave} />
             {current.caption && <p className={styles.lbCaption}>{current.caption}</p>}
           </div>
           <button className={`${styles.lbArrow} ${styles.lbNext}`} onClick={(e) => { e.stopPropagation(); next(); }} aria-label="Next">

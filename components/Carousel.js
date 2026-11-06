@@ -31,7 +31,7 @@ export default function Carousel() {
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           setSlides(data.map((p) => ({
-            src: addWatermark(p.url),
+            src: p.watermarked ? p.url : addWatermark(p.url),
             label: p.caption || "Our Work",
           })));
           setOffset(0);

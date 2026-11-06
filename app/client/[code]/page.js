@@ -1,9 +1,21 @@
+import { cache } from "react";
+import { headers } from "next/headers";
 import { connectToDb } from "@/lib/mongodb";
 import { notFound } from "next/navigation";
+import { clientGallery, clientPhoto, getWatermarkSettings } from "@/lib/delivery";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 import ClientGalleryClient from "./ClientGalleryClient";
 
-async function getClientGallery(code) {
+export const dynamic = "force-dynamic";
+
+// cache() makes the page and generateMetadata share one lookup per request,
+// so a visit is counted once and uses one rate-limit slot.
+const getClientGallery = cache(async (code) => {
   try {
+    // Stops anyone guessing access codes by trying URLs quickly.
+    const limit = rateLimit(`client-page:${clientIp(headers())}`, { limit: 30, windowMs: 60 * 1000 });
+    if (!limit.ok) return null;
+
     const db = await connectToDb();
     const gallery = await db.collection("galleries").findOne({ accessCode: code });
     if (!gallery) return null;
@@ -17,17 +29,19 @@ async function getClientGallery(code) {
       { $inc: { viewCount: 1 }, $set: { lastViewedAt: new Date() } }
     );
 
+    const wm = await getWatermarkSettings(db);
+    // Resized copies only. Originals are fetched through the code-checked download route.
     return {
-      gallery: { ...gallery, _id: gallery._id.toString() },
-      photos: photos.map((p) => ({ ...p, _id: p._id.toString() })),
+      gallery: clientGallery(gallery),
+      photos: photos.map((p) => clientPhoto(p, gallery, wm)),
     };
   } catch { return null; }
-}
+});
 
 export async function generateMetadata({ params }) {
   const data = await getClientGallery(params.code);
   if (!data) return {};
-  return { title: `${data.gallery.title} — Your Gallery` };
+  return { title: `${data.gallery.title} — Your Gallery`, robots: { index: false, follow: false } };
 }
 
 export default async function ClientGalleryPage({ params }) {

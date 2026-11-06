@@ -1,16 +1,14 @@
 "use client";
 import { useState } from "react";
 import { FiX, FiChevronLeft, FiChevronRight, FiImage } from "react-icons/fi";
-import { addPublicWatermark } from "@/lib/photo-utils";
 import styles from "./gallery-viewer.module.css";
 
 const noSave = (e) => e.preventDefault();
 
-export default function GalleryViewer({ gallery, photos, wmSettings = {} }) {
+export default function GalleryViewer({ gallery, photos }) {
   const [lightbox, setLightbox] = useState(null);
 
-  // Always watermark public gallery photos — strong diagonal centre mark
-  const wm = (url) => addPublicWatermark(url, wmSettings);
+  // The server already sends resized, watermarked copies (thumbUrl / previewUrl).
 
   function prev() { setLightbox((i) => (i > 0 ? i - 1 : photos.length - 1)); }
   function next() { setLightbox((i) => (i < photos.length - 1 ? i + 1 : 0)); }
@@ -34,7 +32,7 @@ export default function GalleryViewer({ gallery, photos, wmSettings = {} }) {
             {photos.map((p, i) => (
               <button key={p._id} className={styles.thumb} onClick={() => setLightbox(i)} onContextMenu={noSave}>
                 <img
-                  src={wm(p.thumbnailUrl || p.url)}
+                  src={p.thumbUrl}
                   alt={p.caption || `Photo ${i + 1}`}
                   loading="lazy"
                   draggable={false}
@@ -52,7 +50,7 @@ export default function GalleryViewer({ gallery, photos, wmSettings = {} }) {
           <button className={styles.lbPrev} onClick={(e) => { e.stopPropagation(); prev(); }}><FiChevronLeft size={32} /></button>
           <div className={styles.lbImgWrap} onClick={(e) => e.stopPropagation()} onContextMenu={noSave}>
             <img
-              src={wm(photos[lightbox].url)}
+              src={photos[lightbox].previewUrl}
               alt={photos[lightbox].caption || ""}
               className={styles.lbImg}
               draggable={false}

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { connectToDb } from "@/lib/mongodb";
+import { showcasePhoto, getWatermarkSettings } from "@/lib/delivery";
 
 export const dynamic = "force-dynamic";
 
@@ -28,7 +29,8 @@ export async function GET() {
       .toArray();
 
     if (pinned.length > 0) {
-      return NextResponse.json(pinned.map((p) => ({ ...p, _id: p._id.toString() })));
+      const wm = await getWatermarkSettings(db);
+      return NextResponse.json(pinned.map((p) => showcasePhoto(p, wm)));
     }
 
     // Last resort: cover images from featured galleries

@@ -51,7 +51,7 @@ export default function GalleryEditor({ gallery: initial, photos: initialPhotos 
         body: JSON.stringify({ galleryId: gallery._id }),
       });
       if (!sigRes.ok) throw new Error("Failed to get upload signature");
-      const { signature, timestamp, cloudName, apiKey, folder } = await sigRes.json();
+      const { signature, timestamp, cloudName, apiKey, folder, type } = await sigRes.json();
 
       const cloudinaryResults = [];
       for (let i = 0; i < files.length; i++) {
@@ -61,6 +61,7 @@ export default function GalleryEditor({ gallery: initial, photos: initialPhotos 
         fd.append("timestamp", String(timestamp));
         fd.append("signature", signature);
         fd.append("folder", folder);
+        if (type) fd.append("type", type); // must match what the server signed
         const up = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
           method: "POST", body: fd,
         });
@@ -116,9 +117,9 @@ export default function GalleryEditor({ gallery: initial, photos: initialPhotos 
     await fetch(`/api/galleries/${gallery._id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...gallery, coverImage: photo.url }),
+      body: JSON.stringify({ ...gallery, coverImage: photo.coverUrl || photo.url }),
     });
-    setGallery((g) => ({ ...g, coverImage: photo.url }));
+    setGallery((g) => ({ ...g, coverImage: photo.coverUrl || photo.url }));
     showFlash("Cover image set");
   }
 
@@ -183,8 +184,8 @@ export default function GalleryEditor({ gallery: initial, photos: initialPhotos 
               {photos.map((photo) => (
                 <div key={photo._id} className={styles.photoCard}>
                   <div className={styles.photoThumb}>
-                    <img src={photo.url} alt="" />
-                    {gallery.coverImage === photo.url && (
+                    <img src={photo.adminUrl || photo.url} alt="" />
+                    {(gallery.coverImage === photo.coverUrl || gallery.coverImage === photo.url) && (
                       <div className={styles.coverBadge}><FiStar size={11} /> Cover</div>
                     )}
                     {photo.showOnHomepage && (
@@ -199,7 +200,7 @@ export default function GalleryEditor({ gallery: initial, photos: initialPhotos 
                     >
                       <FiHome size={13} />
                     </button>
-                    {gallery.coverImage !== photo.url && (
+                    {gallery.coverImage !== photo.coverUrl && gallery.coverImage !== photo.url && (
                       <button onClick={() => setCover(photo)} className={styles.iconBtn} title="Set as gallery cover">
                         <FiStar size={13} />
                       </button>

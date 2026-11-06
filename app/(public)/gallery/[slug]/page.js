@@ -1,10 +1,9 @@
 import { connectToDb } from "@/lib/mongodb";
+import { publicGallery, publicPhoto, getWatermarkSettings } from "@/lib/delivery";
 import { notFound } from "next/navigation";
 import GalleryViewer from "./GalleryViewer";
 
 export const revalidate = 60;
-
-const WM_DEFAULTS = { text: "COSENG Photography", font: "Dancing_Script", size: 80, opacity: 40, angle: -20 };
 
 async function getGallery(slug) {
   try {
@@ -15,19 +14,14 @@ async function getGallery(slug) {
       .find({ galleryId: g._id.toString() })
       .sort({ order: 1, uploadedAt: 1 })
       .toArray();
+    const wm = await getWatermarkSettings(db);
+    // Only publishable fields and watermarked copies leave the server: no access code,
+    // no client details, no original file addresses.
     return {
-      gallery: { ...g, _id: g._id.toString() },
-      photos: photos.map((p) => ({ ...p, _id: p._id.toString() })),
+      gallery: publicGallery(g),
+      photos: photos.map((p) => publicPhoto(p, wm)),
     };
   } catch { return null; }
-}
-
-async function getWatermarkSettings() {
-  try {
-    const db = await connectToDb();
-    const doc = await db.collection("settings").findOne({ key: "watermark" });
-    return { ...WM_DEFAULTS, ...(doc || {}) };
-  } catch { return WM_DEFAULTS; }
 }
 
 export async function generateMetadata({ params }) {
@@ -37,7 +31,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function GalleryPage({ params }) {
-  const [data, wmSettings] = await Promise.all([getGallery(params.slug), getWatermarkSettings()]);
+  const data = await getGallery(params.slug);
   if (!data) notFound();
-  return <GalleryViewer gallery={data.gallery} photos={data.photos} wmSettings={wmSettings} />;
+  return <GalleryViewer gallery={data.gallery} photos={data.photos} />;
 }

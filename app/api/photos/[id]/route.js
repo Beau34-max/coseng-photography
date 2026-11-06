@@ -13,7 +13,7 @@ export async function DELETE(req, { params }) {
     const photo = await db.collection("photos").findOne({ _id: new ObjectId(params.id) });
     if (!photo) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-    await deletePhoto(photo.publicId);
+    await deletePhoto(photo.publicId, photo.deliveryType === "authenticated" ? "authenticated" : "upload");
     await db.collection("photos").deleteOne({ _id: photo._id });
     await db.collection("galleries").updateOne(
       { _id: new ObjectId(photo.galleryId) },

@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { FiDownload, FiHeart, FiX, FiChevronLeft, FiChevronRight, FiCamera } from "react-icons/fi";
-import { addWatermark } from "@/lib/photo-utils";
 import styles from "./client-gallery.module.css";
 
 export default function ClientGalleryClient({ gallery, photos, accessCode }) {
@@ -32,9 +31,8 @@ export default function ClientGalleryClient({ gallery, photos, accessCode }) {
     }
   }
 
-  const wm = (url) => gallery.watermarkClient
-    ? addWatermark(url, gallery.watermarkPosition || "south_east")
-    : url;
+  // Originals are only reachable through this code-checked route, which sends a short-lived link.
+  const downloadHref = (photoId) => `/api/client-gallery/${encodeURIComponent(accessCode)}/download?photo=${photoId}`;
 
   function prev() { setLightbox((i) => (i > 0 ? i - 1 : displayed.length - 1)); }
   function next() { setLightbox((i) => (i < displayed.length - 1 ? i + 1 : 0)); }
@@ -85,7 +83,7 @@ export default function ClientGalleryClient({ gallery, photos, accessCode }) {
             {displayed.map((p, i) => (
               <div key={p._id} className={styles.thumb}>
                 <img
-                  src={wm(p.thumbnailUrl || p.url)}
+                  src={p.thumbUrl}
                   alt={p.caption || `Photo ${i + 1}`}
                   loading="lazy"
                   onClick={() => setLightbox(i)}
@@ -99,7 +97,7 @@ export default function ClientGalleryClient({ gallery, photos, accessCode }) {
                     <FiHeart size={16} />
                   </button>
                   <a
-                    href={p.url}
+                    href={downloadHref(p._id)}
                     download
                     className={styles.dlBtn}
                     target="_blank"
@@ -121,7 +119,7 @@ export default function ClientGalleryClient({ gallery, photos, accessCode }) {
           <button className={styles.lbClose} onClick={() => setLightbox(null)}><FiX size={22} /></button>
           <button className={styles.lbPrev} onClick={(e) => { e.stopPropagation(); prev(); }}><FiChevronLeft size={28} /></button>
           <div className={styles.lbContent} onClick={(e) => e.stopPropagation()}>
-            <img src={displayed[lightbox].url} alt="" className={styles.lbImg} />
+            <img src={displayed[lightbox].previewUrl} alt="" className={styles.lbImg} />
             <div className={styles.lbActions}>
               <button
                 className={`${styles.lbFav} ${favourites.has(displayed[lightbox]._id) ? styles.lbFavActive : ""}`}
@@ -130,7 +128,7 @@ export default function ClientGalleryClient({ gallery, photos, accessCode }) {
                 <FiHeart size={18} />
                 {favourites.has(displayed[lightbox]._id) ? "Unfavourite" : "Favourite"}
               </button>
-              <a href={displayed[lightbox].url} download target="_blank" rel="noopener noreferrer" className={styles.lbDl}>
+              <a href={downloadHref(displayed[lightbox]._id)} download target="_blank" rel="noopener noreferrer" className={styles.lbDl}>
                 <FiDownload size={18} /> Download
               </a>
             </div>

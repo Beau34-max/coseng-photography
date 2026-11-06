@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectToDb } from "@/lib/mongodb";
 import { getAdminFromRequest } from "@/lib/auth";
 import { uploadPhoto } from "@/lib/cloudinary";
+import { privateUploadsEnabled } from "@/lib/delivery";
 
 export async function POST(req) {
   try {
@@ -25,11 +26,13 @@ export async function POST(req) {
       const bytes = await file.arrayBuffer();
       const buffer = Buffer.from(bytes);
       const base64 = `data:${file.type};base64,${buffer.toString("base64")}`;
-      const result = await uploadPhoto(base64, `coseng-photography/${galleryId}`);
+      const result = await uploadPhoto(base64, `coseng-photography/${galleryId}`, {
+        type: privateUploadsEnabled() ? "authenticated" : "upload",
+      });
       const photo = {
         galleryId, publicId: result.publicId,
         url: result.url, width: result.width, height: result.height,
-        format: result.format, caption: "", isCover: false, order: 0,
+        format: result.format, deliveryType: result.type === "authenticated" ? "authenticated" : "upload", caption: "", isCover: false, order: 0,
         uploadedAt: new Date(), uploadedBy: admin.email,
       };
       const ins = await db.collection("photos").insertOne(photo);

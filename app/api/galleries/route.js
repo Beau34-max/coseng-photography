@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { connectToDb } from "@/lib/mongodb";
 import { getAdminFromRequest } from "@/lib/auth";
 import { ObjectId } from "mongodb";
+import { publicGallery } from "@/lib/delivery";
 
 export async function GET(req) {
   try {
@@ -9,14 +10,19 @@ export async function GET(req) {
     const category = searchParams.get("category");
     const publicOnly = searchParams.get("public") === "true";
 
+    // Signed-in admins see everything. Anyone else only ever gets public galleries,
+    // and only the fields that are safe to publish (never access codes or client details).
+    const admin = await getAdminFromRequest(req);
+
     const db = await connectToDb();
     const filter = {};
-    if (publicOnly) filter.isPublic = true;
-    if (category && category !== "all") filter.category = category;
+    if (publicOnly || !admin) filter.isPublic = true;
+    if (category && category !== "all") filter.category = String(category);
 
     const galleries = await db.collection("galleries")
       .find(filter).sort({ createdAt: -1 }).toArray();
 
+    if (!admin) return NextResponse.json(galleries.map(publicGallery));
     return NextResponse.json(galleries.map((g) => ({ ...g, _id: g._id.toString() })));
   } catch (err) {
     console.error(err);

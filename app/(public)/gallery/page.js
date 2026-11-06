@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { connectToDb } from "@/lib/mongodb";
+import { publicPhoto, getWatermarkSettings } from "@/lib/delivery";
 import PhotoGrid from "./PhotoGrid";
 import styles from "./gallery.module.css";
 
@@ -26,15 +27,17 @@ async function getAllPhotos() {
     });
     const galleryIds = galleries.map((g) => g._id.toString());
 
-    const photos = await db.collection("photos")
-      .find({ galleryId: { $in: galleryIds } })
-      .sort({ uploadedAt: -1 })
-      .toArray();
+    const [photos, wm] = await Promise.all([
+      db.collection("photos")
+        .find({ galleryId: { $in: galleryIds } })
+        .sort({ uploadedAt: -1 })
+        .toArray(),
+      getWatermarkSettings(db),
+    ]);
 
+    // Visitors only receive resized, watermarked copies, never the original file.
     return photos.map((p) => ({
-      _id: p._id.toString(),
-      url: p.url,
-      caption: p.caption || "",
+      ...publicPhoto(p, wm),
       category: catMap[p.galleryId] || "Other",
     }));
   } catch { return []; }

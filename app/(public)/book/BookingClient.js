@@ -21,7 +21,7 @@ export default function BookingClient({ packages }) {
       const res = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, packageName: pkg.name, packageId: pkg.id, amount: pkg.price }),
+        body: JSON.stringify({ ...form, packageName: pkg.name, packageId: pkg.id }),
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error || "Booking failed"); setSubmitting(false); return; }
