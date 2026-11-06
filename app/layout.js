@@ -3,7 +3,7 @@ import "./globals.css";
 export const metadata = {
   title: { default: "COSENG Photography", template: "%s | COSENG Photography" },
   description: "Professional photography services across Newcastle & the North East. Book a session today.",
-  icons: { icon: "/icon.png" },
+  icons: { icon: "/icon.svg" },
 };
 
 export default function RootLayout({ children }) {

@@ -9,7 +9,7 @@ export default function PublicFooter() {
       <div className={styles.inner}>
         <div className={styles.brand}>
           <div className={styles.logo}>
-            <Image src="/images/cosenglogo.png" alt="COSENG" width={100} height={32} style={{ objectFit: "contain" }} />
+            <Image src="/images/coseng-emblem.svg" alt="COSENG" width={36} height={36} style={{ objectFit: "contain" }} />
             <em>Photography</em>
           </div>
           <p>Professional photography across Newcastle &amp; the North East. Capturing moments that matter.</p>
