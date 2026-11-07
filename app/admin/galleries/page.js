@@ -2,8 +2,10 @@ import { connectToDb } from "@/lib/mongodb";
 import { getCurrentAdmin } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { FiPlus, FiImage, FiEye, FiEdit2, FiTrash2, FiShare2 } from "react-icons/fi";
+import { FiPlus, FiImage, FiEye, FiEdit2, FiShare2 } from "react-icons/fi";
 import styles from "./galleries.module.css";
+import GalleryActions from "./GalleryActions";
+import MigrateBanner from "./MigrateBanner";
 
 export const metadata = { title: "Galleries" };
 
@@ -33,6 +35,8 @@ export default async function GalleriesPage() {
           <FiPlus size={16} /> New Gallery
         </Link>
       </div>
+
+      <MigrateBanner />
 
       {galleries.length === 0 ? (
         <div className={styles.empty}>
@@ -72,6 +76,7 @@ export default async function GalleriesPage() {
                       <FiShare2 size={14} /> Client Link
                     </a>
                   )}
+                  <GalleryActions galleryId={g._id} galleryTitle={g.title} />
                 </div>
               </div>
             </div>

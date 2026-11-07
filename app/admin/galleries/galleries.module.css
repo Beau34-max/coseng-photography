@@ -65,3 +65,33 @@
   transition: background 0.2s;
 }
 .actBtn:hover { background: #e2e8f0; }
+.actBtnDanger { color: #dc2626; }
+.actBtnDanger:hover { background: #fee2e2; }
+
+.confirmDelete {
+  display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;
+  font-size: 0.78rem; color: #374151;
+}
+.confirmBtn {
+  padding: 0.3rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 600;
+  background: #dc2626; color: #fff; border: none; cursor: pointer;
+}
+.confirmBtn:disabled { opacity: 0.6; }
+.cancelBtn {
+  padding: 0.3rem 0.65rem; border-radius: 6px; font-size: 0.78rem; font-weight: 600;
+  background: #f1f5f9; color: #374151; border: none; cursor: pointer;
+}
+
+.migrateBar {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  background: #fffbeb; border: 1.5px solid #fbbf24; border-radius: 10px;
+  padding: 0.9rem 1.2rem; margin-bottom: 1.5rem;
+}
+.migrateBar p { font-size: 0.85rem; color: #92400e; margin: 0; }
+.migrateBtn {
+  flex-shrink: 0; padding: 0.45rem 1rem; background: #f59e0b; color: #fff;
+  border: none; border-radius: 7px; font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; transition: background 0.2s; white-space: nowrap;
+}
+.migrateBtn:hover:not(:disabled) { background: #d97706; }
+.migrateBtn:disabled { opacity: 0.6; cursor: not-allowed; }
