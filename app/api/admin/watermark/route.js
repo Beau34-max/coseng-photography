@@ -4,7 +4,7 @@ import { connectToDb } from "@/lib/mongodb";
 
 const DEFAULTS = {
   text: "COSENG Photography",
-  font: "Dancing_Script",
+  font: "Arial",
   size: 80,
   opacity: 40,
   angle: -20,
