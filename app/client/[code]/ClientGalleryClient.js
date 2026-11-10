@@ -1,6 +1,6 @@
 "use client";
-import { useState } from "react";
-import { FiDownload, FiHeart, FiX, FiChevronLeft, FiChevronRight, FiCamera } from "react-icons/fi";
+import { useState, useEffect } from "react";
+import { FiDownload, FiHeart, FiX, FiChevronLeft, FiChevronRight, FiCamera, FiMaximize2 } from "react-icons/fi";
 import styles from "./client-gallery.module.css";
 
 export default function ClientGalleryClient({ gallery, photos, accessCode }) {
@@ -36,6 +36,17 @@ export default function ClientGalleryClient({ gallery, photos, accessCode }) {
 
   function prev() { setLightbox((i) => (i > 0 ? i - 1 : displayed.length - 1)); }
   function next() { setLightbox((i) => (i < displayed.length - 1 ? i + 1 : 0)); }
+
+  useEffect(() => {
+    if (lightbox === null) return;
+    function onKey(e) {
+      if (e.key === "ArrowLeft") prev();
+      else if (e.key === "ArrowRight") next();
+      else if (e.key === "Escape") setLightbox(null);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightbox, displayed.length]);
 
   return (
     <div className={styles.page}>
@@ -88,6 +99,9 @@ export default function ClientGalleryClient({ gallery, photos, accessCode }) {
                   loading="lazy"
                   onClick={() => setLightbox(i)}
                 />
+                <div className={styles.expandHint} aria-hidden="true">
+                  <FiMaximize2 size={13} />
+                </div>
                 <div className={styles.thumbOverlay}>
                   <button
                     className={`${styles.favBtn} ${favourites.has(p._id) ? styles.favBtnActive : ""}`}
@@ -119,7 +133,8 @@ export default function ClientGalleryClient({ gallery, photos, accessCode }) {
           <button className={styles.lbClose} onClick={() => setLightbox(null)}><FiX size={22} /></button>
           <button className={styles.lbPrev} onClick={(e) => { e.stopPropagation(); prev(); }}><FiChevronLeft size={28} /></button>
           <div className={styles.lbContent} onClick={(e) => e.stopPropagation()}>
-            <img src={displayed[lightbox].previewUrl} alt="" className={styles.lbImg} />
+            <img src={displayed[lightbox].previewUrl} alt={displayed[lightbox].caption || ""} className={styles.lbImg} />
+            {displayed[lightbox].caption && <p className={styles.lbCaption}>{displayed[lightbox].caption}</p>}
             <div className={styles.lbActions}>
               <button
                 className={`${styles.lbFav} ${favourites.has(displayed[lightbox]._id) ? styles.lbFavActive : ""}`}

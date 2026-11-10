@@ -18,13 +18,17 @@
 .photoCount { font-size: 0.8rem; color: rgba(255,255,255,0.35); }
 
 .gridWrap { max-width: 1400px; margin: 0 auto; padding: 1rem 1rem; }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 6px; }
-.thumb { position: relative; aspect-ratio: 4/3; overflow: hidden; background: #1a1a1a; cursor: pointer; }
-.thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+.grid { columns: 3 240px; column-gap: 6px; }
+.thumb { position: relative; overflow: hidden; background: #1a1a1a; cursor: pointer; break-inside: avoid; margin-bottom: 6px; }
+.thumb img { width: 100%; height: auto; display: block; transition: transform 0.35s; }
 .thumb:hover img { transform: scale(1.04); }
-.thumbOverlay { position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: rgba(0,0,0,0); transition: background 0.2s; display: flex; align-items: flex-end; justify-content: flex-end; padding: 0.6rem; gap: 0.4rem; opacity: 0; }
-.thumb:hover .thumbOverlay { opacity: 1; background: rgba(0,0,0,0.3); }
-.favBtn, .dlBtn { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; background: rgba(255,255,255,0.15); color: #fff; backdrop-filter: blur(4px); transition: background 0.2s; }
+.thumbOverlay { position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: rgba(0,0,0,0); transition: background 0.2s; display: flex; align-items: flex-end; justify-content: flex-end; padding: 0.6rem; gap: 0.4rem; }
+.thumb:hover .thumbOverlay { background: rgba(0,0,0,0.35); }
+.thumbOverlay .favBtn, .thumbOverlay .dlBtn { opacity: 0; transform: translateY(4px); transition: opacity 0.2s, transform 0.2s, background 0.2s; }
+.thumb:hover .thumbOverlay .favBtn, .thumb:hover .thumbOverlay .dlBtn { opacity: 1; transform: translateY(0); }
+/* Always-visible expand hint at top-left */
+.expandHint { position: absolute; top: 0.5rem; left: 0.5rem; width: 28px; height: 28px; border-radius: 6px; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.7); pointer-events: none; backdrop-filter: blur(3px); }
+.favBtn, .dlBtn { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; background: rgba(255,255,255,0.15); color: #fff; backdrop-filter: blur(4px); transition: background 0.2s, opacity 0.2s, transform 0.2s; }
 .favBtn:hover { background: rgba(232,201,144,0.4); }
 .favBtnActive { background: #F0D890; color: #1a1a1a; }
 .dlBtn { text-decoration: none; color: #fff; background: rgba(255,255,255,0.15); }
@@ -35,16 +39,29 @@
 .empty p { font-size: 0.95rem; max-width: 320px; margin: 0 auto; line-height: 1.6; }
 
 /* LIGHTBOX */
-.lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.97); z-index: 200; display: flex; align-items: center; justify-content: center; }
-.lbClose { position: absolute; top: 1.25rem; right: 1.25rem; background: rgba(255,255,255,0.1); border: none; color: #fff; width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-.lbPrev, .lbNext { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.08); border: none; color: #fff; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s; z-index: 10; }
-.lbPrev { left: 1.25rem; }
-.lbNext { right: 1.25rem; }
-.lbPrev:hover, .lbNext:hover, .lbClose:hover { background: rgba(255,255,255,0.2); }
-.lbContent { display: flex; flex-direction: column; align-items: center; max-width: 90vw; }
-.lbImg { max-width: 100%; max-height: 76vh; object-fit: contain; }
-.lbActions { display: flex; gap: 0.75rem; margin-top: 1rem; }
-.lbFav, .lbDl { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; border: 1px solid rgba(255,255,255,0.2); color: #fff; background: transparent; transition: all 0.2s; text-decoration: none; }
+.lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.97); z-index: 200; display: flex; align-items: center; justify-content: center; animation: lbFadeIn 0.18s ease; }
+@keyframes lbFadeIn { from { opacity: 0; } to { opacity: 1; } }
+.lbClose { position: absolute; top: 1.25rem; right: 1.25rem; background: rgba(255,255,255,0.1); border: none; color: #fff; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s; cursor: pointer; }
+.lbPrev, .lbNext { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.1); border: none; color: #fff; width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.2s; z-index: 10; cursor: pointer; }
+.lbPrev { left: 1rem; }
+.lbNext { right: 1rem; }
+.lbPrev:hover, .lbNext:hover, .lbClose:hover { background: rgba(255,255,255,0.22); }
+.lbContent { display: flex; flex-direction: column; align-items: center; max-width: min(90vw, 1200px); }
+.lbImg { max-width: 100%; max-height: 78vh; object-fit: contain; border-radius: 4px; }
+.lbCaption { font-size: 0.88rem; color: rgba(255,255,255,0.55); margin-top: 0.6rem; min-height: 1.2em; }
+.lbActions { display: flex; gap: 0.75rem; margin-top: 0.75rem; }
+.lbFav, .lbDl { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.55rem 1.1rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; border: 1px solid rgba(255,255,255,0.2); color: #fff; background: transparent; transition: all 0.2s; text-decoration: none; cursor: pointer; }
 .lbFav:hover, .lbDl:hover { background: rgba(255,255,255,0.1); }
 .lbFavActive { background: rgba(255,184,0,0.15); border-color: #F0D890; color: #F0D890; }
-.lbCounter { font-size: 0.78rem; color: rgba(255,255,255,0.35); margin-top: 0.5rem; }
+.lbCounter { font-size: 0.78rem; color: rgba(255,255,255,0.3); margin-top: 0.4rem; }
+/* Mobile: always show action buttons */
+@media (hover: none) {
+  .thumbOverlay .favBtn, .thumbOverlay .dlBtn { opacity: 1; transform: translateY(0); }
+  .thumbOverlay { background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%); }
+}
+@media (max-width: 600px) {
+  .lbPrev { left: 0.4rem; }
+  .lbNext { right: 0.4rem; }
+  .lbPrev, .lbNext { width: 42px; height: 42px; }
+  .grid { columns: 2; }
+}
