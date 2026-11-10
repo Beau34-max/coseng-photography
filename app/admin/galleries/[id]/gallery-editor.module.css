@@ -169,6 +169,7 @@
 }
 .clientLinkBox a { color: #16a34a; font-weight: 600; text-decoration: none; word-break: break-all; }
 .clientLinkBox a:hover { text-decoration: underline; }
+.clientLinkPin { margin-left: auto; background: #fef3c7; color: #92400e; font-weight: 700; font-size: 0.78rem; padding: 0.2rem 0.6rem; border-radius: 999px; white-space: nowrap; }
 
 /* ACTIVITY tab */
 .activityGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }

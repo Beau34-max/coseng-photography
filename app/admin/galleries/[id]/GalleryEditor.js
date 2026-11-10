@@ -325,12 +325,38 @@ export default function GalleryEditor({ gallery: initial, photos: initialPhotos 
                 <label>Access Code</label>
                 <input value={gallery.accessCode || ""} onChange={(e) => setGallery((g) => ({ ...g, accessCode: e.target.value }))} placeholder="e.g. josephfamily2024" />
               </div>
+              <div className={styles.field}>
+                <label>Access Mode</label>
+                <select
+                  className={styles.select}
+                  value={gallery.clientAccess || "open"}
+                  onChange={(e) => setGallery((g) => ({ ...g, clientAccess: e.target.value }))}
+                >
+                  <option value="open">Open — anyone with the link can view</option>
+                  <option value="pin">PIN protected — client must enter a code</option>
+                </select>
+              </div>
+              {(gallery.clientAccess || "open") === "pin" && (
+                <div className={styles.field}>
+                  <label>Client PIN</label>
+                  <input
+                    value={gallery.clientPin || ""}
+                    onChange={(e) => setGallery((g) => ({ ...g, clientPin: e.target.value }))}
+                    placeholder="e.g. 4829"
+                    maxLength={20}
+                  />
+                  <p className={styles.sectionHint}>Share this PIN with your client separately (e.g. by text or email). They&apos;ll enter it when they visit the link.</p>
+                </div>
+              )}
               {gallery.accessCode && (
                 <div className={styles.clientLinkBox}>
                   <span>Client link:</span>
                   <a href={`/client/${gallery.accessCode}`} target="_blank" rel="noopener noreferrer">
                     photos.coseng.co.uk/client/{gallery.accessCode}
                   </a>
+                  {(gallery.clientAccess || "open") === "pin" && gallery.clientPin && (
+                    <span className={styles.clientLinkPin}>PIN: {gallery.clientPin}</span>
+                  )}
                 </div>
               )}
             </div>

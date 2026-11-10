@@ -54,6 +54,23 @@
 .lbFav:hover, .lbDl:hover { background: rgba(255,255,255,0.1); }
 .lbFavActive { background: rgba(255,184,0,0.15); border-color: #F0D890; color: #F0D890; }
 .lbCounter { font-size: 0.78rem; color: rgba(255,255,255,0.3); margin-top: 0.4rem; }
+/* PIN GATE */
+.pinPage { min-height: 100vh; background: #0a0a0a; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+.pinCard { background: #141414; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 2.5rem 2rem; width: 100%; max-width: 380px; text-align: center; }
+.pinLogoBar { display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 0.82rem; color: rgba(255,255,255,0.4); margin-bottom: 2rem; }
+.pinLogoBar svg { color: #E8C878; }
+.pinIconWrap { width: 60px; height: 60px; border-radius: 50%; background: rgba(232,200,120,0.1); border: 1px solid rgba(232,200,120,0.25); display: flex; align-items: center; justify-content: center; color: #E8C878; margin: 0 auto 1.25rem; }
+.pinTitle { font-size: 1.35rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
+.pinSubtitle { font-size: 0.88rem; color: rgba(255,255,255,0.45); margin-bottom: 1.75rem; line-height: 1.6; }
+.pinForm { display: flex; flex-direction: column; gap: 0.75rem; }
+.pinInput { width: 100%; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05); color: #fff; font-size: 1.1rem; letter-spacing: 0.15em; text-align: center; outline: none; transition: border-color 0.2s; box-sizing: border-box; }
+.pinInput:focus { border-color: #E8C878; }
+.pinInputError { border-color: #e05a5a; }
+.pinError { font-size: 0.82rem; color: #e07070; text-align: center; }
+.pinBtn { width: 100%; padding: 0.8rem 1rem; border-radius: 8px; background: #E8C878; color: #1a1a1a; font-size: 0.95rem; font-weight: 700; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: opacity 0.2s; }
+.pinBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+.pinBtn:not(:disabled):hover { opacity: 0.9; }
+
 /* Mobile: always show action buttons */
 @media (hover: none) {
   .thumbOverlay .favBtn, .thumbOverlay .dlBtn { opacity: 1; transform: translateY(0); }
